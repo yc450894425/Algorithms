@@ -1,4 +1,31 @@
+import javax.xml.crypto.Data;
+import java.sql.Time;
+
 public class BinarySearch {
+
+//    Input => int[] array, int target
+//    output => int index
+//    Assumptions: array not null, fit in memory, return -1 if cannot find.
+//    If there are duplicate elements, anyone is ok.
+//
+//    High level: Two pointers. The size of search space [l, r] is reduced roughly by one half of the previous iteration and the sp is reduced to 2, and then to 1 eventually.
+//    Data structure: Two pointers l and r. [l, r] is the search space.
+//    Initialization: int left = 0; int right = 0;
+//    For each step:
+//    int mid = left + (right - left) / 2; // to avoid overflow
+//	if (array[mid] == target) {
+//        return mid;
+//    } else if (array[mid] < target) {
+//        left = mid + 1;
+//    } else {
+//        right = mid - 1;
+//    }
+//    Termination: left > right
+//    Post-processing: if cannot find, return -1.
+//
+//    If array size is n.
+//    Time Complexity: O(log(2)n). Because we shrink the search space to half till the search space size is reduced to 2, 1.
+//    Auxiliary Space Complexity: O(1).
     public int classicalBinarySearch(int[] array, int target) {
         // corner cases
         if (array == null || array.length == 0) {
@@ -19,7 +46,29 @@ public class BinarySearch {
         return -1;
     }
 
-    // O(m + n)
+//    C: 	input => int[][] matrix, int target
+//    output => int[] coord
+//    A:	matrix not null, not empty, fit in memory
+//	return arbitrary one if there are duplicate elements
+//	return -1 if not exist
+//
+//    R:	High level: We start at the bottom-left corner element of the matrix, compare the target with this element. If target is larger, delete all elements at right side of the element from search space; If target is smaller, delete all elements on top of the element from sp. If target is equal to this element, return its coordinate.
+//    Data Structure: Two indices.
+//    Initilization: int i = matrix.length - 1; int j = 0;
+//    For each step:
+//            if (m[i][j] == target) {
+//        return new int[]{i, j}
+//    } else if (m[i][j] < target) {
+//        j++;
+//    } else {
+//        i--;
+//    }
+//    Termination: i < 0 || j >= matrix[0].length
+//    Post-processing: return new int[]{-1, -1};
+//
+//    If we assume m rows and n cols.
+//    Time Complexity: O(m + n)
+//    Auxiliary Space Complexity: O(2) => O(1)
     public int[] searchInSortedMatrix(int[][] m, int target) {
         // corner cases
         if (m == null || m.length == 0 || m[0].length == 0) {
