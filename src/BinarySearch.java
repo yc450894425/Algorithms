@@ -3,7 +3,7 @@ import java.sql.Time;
 
 public class BinarySearch {
 
-//    Input => int[] array, int target
+    //    Input => int[] array, int target
 //    output => int index
 //    Assumptions: array not null, fit in memory, return -1 if cannot find.
 //    If there are duplicate elements, anyone is ok.
@@ -26,7 +26,7 @@ public class BinarySearch {
 //    If array size is n.
 //    Time Complexity: O(log(2)n). Because we shrink the search space to half till the search space size is reduced to 2, 1.
 //    Auxiliary Space Complexity: O(1).
-    public int classicalBinarySearch(int[] array, int target) {
+    public static int classicalBinarySearch(int[] array, int target) {
         // corner cases
         if (array == null || array.length == 0) {
             return -1;
@@ -46,7 +46,7 @@ public class BinarySearch {
         return -1;
     }
 
-//    C: 	input => int[][] matrix, int target
+    //    C: 	input => int[][] matrix, int target
 //    output => int[] coord
 //    A:	matrix not null, not empty, fit in memory
 //	return arbitrary one if there are duplicate elements
@@ -69,7 +69,7 @@ public class BinarySearch {
 //    If we assume m rows and n cols.
 //    Time Complexity: O(m + n)
 //    Auxiliary Space Complexity: O(2) => O(1)
-    public int[] searchInSortedMatrix(int[][] m, int target) {
+    public static int[] searchInSortedMatrix(int[][] m, int target) {
         // corner cases
         if (m == null || m.length == 0 || m[0].length == 0) {
             return new int[]{-1, -1};
@@ -89,7 +89,7 @@ public class BinarySearch {
         return new int[]{-1, -1};
     }
 
-    public int closest(int[] array, int target) {
+    public static int closest(int[] array, int target) {
         // corner cases
         if (array == null || array.length == 0) {
             return -1;
@@ -113,7 +113,7 @@ public class BinarySearch {
         }
     }
 
-    public int firstOccur(int[] array, int target) {
+    public static int firstOccur(int[] array, int target) {
         // corner cases
         if (array == null || array.length == 0) {
             return -1;
@@ -140,7 +140,7 @@ public class BinarySearch {
         }
     }
 
-    public int[] kClosest(int[] array, int target, int k) {
+    public static int[] kClosestMethodOne(int[] array, int target, int k) {
         // corner cases
         if (array == null || array.length == 0) {
             return new int[]{};
@@ -161,7 +161,7 @@ public class BinarySearch {
     }
 
     // It's correct but not good practice.
-    public int[] kClosetMethodTwo(int[] array, int target, int k) {
+    public static int[] kClosetMethodTwo(int[] array, int target, int k) {
         // corner cases
         if (array == null || array.length == 0) {
             return new int[]{};
@@ -194,7 +194,27 @@ public class BinarySearch {
         return result;
     }
 
-    public int largestSmaller(int[] array, int target) {
+    public static int[] kClosestMethodThree(int[] array, int target, int k) {
+        // corner cases
+        if (array == null || array.length == 0) {
+            return new int[]{};
+        }
+
+        int l = largestSmaller(array, target);
+        int r = l + 1;
+        int[] result = new int[k];
+        for (int i = 0; i < k; i++) {
+            // add array[l] to result
+            if (r >= array.length || l >= 0 && target - array[l] <= array[r] - target) {
+                result[i] = array[l--];
+            } else {
+                result[i] = array[r++];
+            }
+        }
+        return result;
+    }
+
+    public static int largestSmaller(int[] array, int target) {
         // corner cases
         if (array == null || array.length == 0) {
             return -1;
@@ -207,7 +227,7 @@ public class BinarySearch {
             if (array[mid] < target) {
                 l = mid;
             } else {
-                r = mid;
+                r = mid - 1;
             }
         }
 
@@ -219,4 +239,33 @@ public class BinarySearch {
             return -1;
         }
     }
+
+    public static int smallestElementLargerThanTarget(int[] array, int target) {
+        // corner cases
+        if (array == null || array.length == 0) {
+            return -1;
+        }
+
+        int l = 0;
+        int r = array.length - 1;
+        while (l < r - 1) {
+            int mid = l + (r - l) / 2;
+            if (array[mid] > target) {
+                r = mid;
+            } else {
+                l = mid + 1;
+            }
+        }
+        // post-processing
+        if (array[l] > target) {
+            return l;
+        }
+        if (array[r] > target) {
+            return r;
+        }
+        return -1;
+    }
+
+
+
 }
