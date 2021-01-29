@@ -77,16 +77,13 @@ public class Sort {
         }
         return result;
     }
-
-    //quick sort
-    // We pick an element randomly as pivot, and put the pivot to its “correct” position, where all smaller elements are at its left side, and all larger or equal elements are at its right side. Then we repeat this operation toward its left side elements and right side elements till every element is at the “correct” position.
-
+// High level idea: We pick an element randomly as pivot, and put the pivot to its “correct” position, where all smaller elements are at its left side, and all larger or equal elements are at its right side. Then we repeat this operation toward its left side elements and right side elements till every element is at the “correct” position.
 //    Time Complexity:
 //
-//            86735241						O(n)
-//		4312	   5		876					O(n)
-//	1	2	43		6 87					O(n)
-//	1	2	3 	4	6 7	8
+//            86735241						    O(n)
+//		4312	   5(p)		876					O(n)
+//	1	2(p)  43   5(p)    6(p)    87			O(n)
+//	1	2	3 	4	5   6   7	8
 //
 //    average: logn levels, O(nlogn)
 //    worst: n levels, O(n^2)

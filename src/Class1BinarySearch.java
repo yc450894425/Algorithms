@@ -1,7 +1,7 @@
 import javax.xml.crypto.Data;
 import java.sql.Time;
 
-public class BinarySearch {
+public class Class1BinarySearch {
 
     //    Input => int[] array, int target
 //    output => int index
@@ -262,6 +262,35 @@ public class BinarySearch {
         }
         if (array[r] > target) {
             return r;
+        }
+        return -1;
+    }
+
+    interface Dictionary {
+        public Integer get(int index);
+    }
+    public int searchInUnknownSizedSortedArray(Dictionary dict, int target) {
+        // corner cases
+        if (dict == null) {
+            return -1;
+        }
+
+        int l = 0;
+        int r = 1;
+        while (dict.get(r) != null && dict.get(r) < target) {
+            l = r + 1;
+            r *= 2;
+        }
+
+        while (l <= r) {
+            int mid = l + (r - l) / 2;
+            if (dict.get(mid) == null || dict.get(mid) > target) {
+                r = mid - 1;
+            } else if (dict.get(mid) < target) {
+                l = mid + 1;
+            } else {
+                return mid;
+            }
         }
         return -1;
     }
