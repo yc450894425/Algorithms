@@ -231,7 +231,7 @@ public class Class2RecursionIAndSortingAlgorithms {
 //    Space Complexity:
 //    heap => O(1), in place
 //    stack => O(logn) in average, O(n) in worst case
-    public int[] quickSort(int[] array) {
+    public static int[] quickSort(int[] array) {
         // corner cases
         if (array == null || array.length <= 1) {
             return array;
@@ -241,7 +241,7 @@ public class Class2RecursionIAndSortingAlgorithms {
         return array;
     }
 
-    private void quickSort(int[] array, int left, int right) {
+    private static void quickSort(int[] array, int left, int right) {
         // base cases
         if (left >= right) {
             return;
@@ -253,7 +253,7 @@ public class Class2RecursionIAndSortingAlgorithms {
     }
 
     // pick a random pivot, put it to the correct position, then return the pivot index.
-    private int partition(int[] array, int left, int right) {
+    private static int partition(int[] array, int left, int right) {
         int pivot = left + (int) (Math.random() * (right - left + 1));
         swap(array, pivot, right);
         // elements at left side of i (not including i) are elements smaller than pivot
@@ -277,7 +277,7 @@ public class Class2RecursionIAndSortingAlgorithms {
 //    int i: all elements at left side of i (not including i) are non-0 integers;
 //    int j: all elements at right side of j (not including j) are 0s;
 //    [i, j] is the unknown area;
-    public int[] moveZero(int[] array) {
+    public static int[] moveZero(int[] array) {
         // corner cases
         if (array == null || array.length <= 1) {
             return array;
@@ -305,7 +305,7 @@ public class Class2RecursionIAndSortingAlgorithms {
 //
 //    -1 -1 0 0 xxxx 1 1 1
 //          i   j  k
-    public int[] rainbowSort(int[] array) {
+    public static int[] rainbowSort(int[] array) {
         // corner cases
         if (array == null || array.length <= 1) {
             return array;
@@ -325,5 +325,5 @@ public class Class2RecursionIAndSortingAlgorithms {
         }
         return array;
     }
-    
+
 }
