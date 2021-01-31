@@ -7,14 +7,7 @@ import java.util.Map;
 public class Solution {
 
     public static void main(String[] args) {
-        TestHashMap map = new TestHashMap();
-        System.out.println(map.put("a", 1));
-        System.out.println(map.put("b", 2));
-        System.out.println(map.get("a"));
-        System.out.println(map.get("b"));
 
-        AllDecodeWays sol = new AllDecodeWays();
-        System.out.println(sol.allDecodeWays("11021"));
     }
     private static void printArray(int[] array) {
         for (int i = 0; i < array.length - 1; i++) {
