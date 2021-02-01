@@ -20,6 +20,7 @@ public class Solution {
         linkedList.addAtHead(1);
         printMyLinkedList(linkedList);
     }
+
     private static void printArray(int[] array) {
         for (int i = 0; i < array.length - 1; i++) {
 //            System.out.print(i + 1);

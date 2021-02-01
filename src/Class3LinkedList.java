@@ -45,5 +45,61 @@ public class Class3LinkedList {
         return false;
     }
 
+    public ListNode insertInSortedLinkedList(ListNode head, int value) {
+        ListNode newNode = new ListNode(value);
+
+        if (head == null || head.value >= value) {
+            newNode.next = head;
+            return newNode;
+        }
+
+        ListNode prev = head;
+        while (prev.next != null && prev.next.value < value) {
+            prev = prev.next;
+        }
+
+        newNode.next = prev.next;
+        prev.next = newNode;
+        return head;
+    }
+
+    public ListNode merge(ListNode one, ListNode two) {
+        // corner cases
+        if (one == null) {
+            return two;
+        } else if (two == null) {
+            return one;
+        }
+
+        ListNode dummy = new ListNode(0);
+        ListNode cur = dummy;
+
+        while (one != null && two != null) {
+            if (one.value <= two.value) {
+                cur.next = one;
+                one = one.next;
+            } else {
+                cur.next = two;
+                two = two.next;
+            }
+            cur = cur.next;
+        }
+
+        cur.next = one == null ? two : one;
+        return dummy.next;
+    }
+
+    public ListNode reorder(ListNode head) {
+        // corner cases
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        ListNode mid = middleNode(head);
+        ListNode right = mid.next;
+        mid.next = null;
+        return merge(head, reverse(right));
+    }
+
 
 }
