@@ -101,5 +101,43 @@ public class Class3LinkedList {
         return merge(head, reverse(right));
     }
 
+    public ListNode partition(ListNode head, int target) {
+        // corner cases
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        ListNode largerDummy = new ListNode(0);
+        ListNode larger = largerDummy;
+        ListNode smallerDummy = new ListNode(0);
+        ListNode smaller = smallerDummy;
+        while (head != null) {
+            if (head.value < target) {
+                smaller.next = head;
+                smaller = smaller.next;
+            } else {
+                larger.next = head;
+                larger = larger.next;
+            }
+            head = head.next;
+        }
+        smaller.next = largerDummy.next;
+        larger.next = null;
+        return smallerDummy.next;
+    }
+
+    public ListNode mergeSort(ListNode head) {
+        // base cases
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        // recursive rules
+        ListNode mid = middleNode(head);
+        ListNode right = mid.next;
+        mid.next = null;
+        return merge(mergeSort(head), mergeSort(right));
+    }
+
 
 }
