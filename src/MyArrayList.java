@@ -15,11 +15,11 @@ public class MyArrayList<E> {
     }
 
     public MyArrayList(int capacity) {
-        new MyArrayList(capacity, DEFAULT_EXPAND_COEFFICIENT);
+         this(capacity, DEFAULT_EXPAND_COEFFICIENT);
     }
 
     public MyArrayList() {
-        new MyArrayList(DEFAULT_CAPACITY);
+        this(DEFAULT_CAPACITY);
     }
 
     public E get(int index) {
@@ -43,14 +43,42 @@ public class MyArrayList<E> {
     }
 
     public void add(E e) {
-        if (size == array.length - 1) {
+        if (size == array.length) {
             expand();
         }
         array[size++] = e;
     }
 
     public void add(int index, E e) {
+        if (size == array.length) {
+            expand();
+        }
+        for (int i = size; i > index; i--) {
+            array[i] = array[i - 1];
+        }
+        array[index] = e;
+        size++;
+    }
 
+    public E remove() {
+        if (size == 0) {
+            return null;
+        }
+        E old = array[--size];
+        array[size] = null;
+        return old;
+    }
+
+    public E remove(int index) {
+        if (index < 0 || index >= size) {
+            return null;
+        }
+        E old = array[index];
+        for (int i = index; i < size - 1; i++) {
+            array[i] = array[i + 1];
+        }
+        array[--size] = null;
+        return old;
     }
 
     private void expand() {
