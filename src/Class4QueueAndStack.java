@@ -1,3 +1,4 @@
+import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.LinkedList;
 
@@ -52,4 +53,46 @@ public class Class4QueueAndStack {
         }
     }
 
+    public static class QueueByTwoStacks {
+
+        Deque<Integer> in;
+        Deque<Integer> out;
+
+        public QueueByTwoStacks() {
+            in = new ArrayDeque<>();
+            out = new ArrayDeque<>();
+        }
+
+        public void offer(int element) {
+            in.offerFirst(element);
+        }
+
+        public Integer peek() {
+            if (out.isEmpty()) {
+                move();
+            }
+            return out.peekFirst();
+        }
+
+        public Integer poll() {
+            if (out.isEmpty()) {
+                move();
+            }
+            return out.pollFirst();
+        }
+
+        public int size() {
+            return in.size() + out.size();
+        }
+
+        public boolean isEmpty() {
+            return in.isEmpty() && out.isEmpty();
+        }
+
+        private void move() {
+            while (!in.isEmpty()) {
+                out.offerFirst(in.pollFirst());
+            }
+        }
+    }
 }

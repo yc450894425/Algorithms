@@ -7,29 +7,18 @@ import java.util.Map;
 public class Solution {
 
     public static void main(String[] args) {
-        MyArrayList<Integer> list = new MyArrayList<>(5);
-        list.add(1);
-        list.add(2);
-        list.add(3);
-        list.add(4);
-        list.add(5);
-        printMyArrayList(list);
-        list.add(6);
-        list.add(7);
-        list.add(8);
-        list.add(9);
-        list.add(10);
-        printMyArrayList(list);
-        list.remove();
-        list.remove();
-        list.remove();
-        list.remove();
-        list.remove();
-        printMyArrayList(list);
-        list.remove(2);
-        printMyArrayList(list);
-        list.add(2, 3);
-        printMyArrayList(list);
+        MyLinkedList<Integer> linkedList = new MyLinkedList<>();
+        printMyLinkedList(linkedList);
+        linkedList.addAtHead(1);
+        linkedList.addAtTail(3);
+        linkedList.addAtIndex(1, 2);
+        printMyLinkedList(linkedList);
+        linkedList.deleteAtIndex(3);
+        printMyLinkedList(linkedList);
+        linkedList.addAtTail(4);
+        printMyLinkedList(linkedList);
+        linkedList.addAtHead(1);
+        printMyLinkedList(linkedList);
     }
 
     private static void printArray(int[] array) {
@@ -64,13 +53,5 @@ public class Solution {
             System.out.print(linkedList.get(i) + " => ");
         }
         System.out.println(linkedList.get(size));
-    }
-
-    private static void printMyArrayList(MyArrayList arrayList) {
-        int size = arrayList.size();
-        for (int i = 0; i < size; i++) {
-            System.out.print(arrayList.get(i) + " ");
-        }
-        System.out.println();
     }
 }
