@@ -1,9 +1,10 @@
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.Queue;
 
 public class Class4QueueAndStack {
-//    C:	input => stack s1
+    //    C:	input => stack s1
 //    output => void
 //    A: 	fit in memory, not null;
 //    Ascending? yes
@@ -13,7 +14,6 @@ public class Class4QueueAndStack {
 //
 //    Time Complexity: O(n + n-1 + n-2 + ... + 2 + 1) = O(n^2)
 //    Auxiliary Space Complexity: O(1)
-
     public void SortWith2Stacks(LinkedList<Integer> s1) {
         Deque<Integer> s2 = new LinkedList<>();
         while (!s1.isEmpty()) {
@@ -95,4 +95,104 @@ public class Class4QueueAndStack {
             }
         }
     }
+
+    public static class StackWithMin {
+
+        private Deque<Integer> stack;
+        private Deque<Pair> minStack;
+
+        public StackWithMin() {
+            stack = new ArrayDeque<>();
+            minStack = new ArrayDeque<>();
+        }
+
+        public int pop() {
+            if (stack.isEmpty()) {
+                return -1;
+            }
+            if (stack.size() == minStack.peekFirst().size) {
+                minStack.pollFirst();
+            }
+            return stack.pollFirst();
+        }
+
+        public void push(int element) {
+
+            stack.offerFirst(element);
+
+            if (minStack.isEmpty() || element < minStack.peek().minVal) {
+                minStack.offerFirst(new Pair(element, stack.size()));
+            }
+        }
+
+        public int top() {
+            if (stack.isEmpty()) {
+                return -1;
+            }
+            return stack.peekFirst();
+        }
+
+        public int min() {
+            if (minStack.isEmpty()) {
+                return -1;
+            }
+            return minStack.peekFirst().minVal;
+        }
+
+        static class Pair {
+            public Integer minVal;
+            public Integer size;
+
+            public Pair(int minVal, int size) {
+                this.minVal = minVal;
+                this.size = size;
+            }
+        }
+    }
+
+    public static class StackByQueue {
+        //    We use a stack to store elements and another minStack to store minValue and the size of stack after the minValue was pushed into stack as a pair <minVal, size>.u788888888888888888888888888888887u66u87hhh6\12\`=-08\\`````````````12112\\`=-0\`=-public static class StackByQueue {
+        private Queue<Integer> queue;
+
+        public StackByQueue() {
+            queue = new ArrayDeque<>();
+        }
+
+        public void push(int x) {
+            queue.offer(x);
+        }
+
+        public Integer pop() {
+            if (queue.isEmpty()) {
+                return null;
+            }
+
+            int size = queue.size();
+            while (--size != 0) {
+                queue.offer(queue.poll());
+            }
+            return queue.poll();
+        }
+
+        public Integer top() {
+            if (queue.isEmpty()) {
+                return null;
+            }
+
+            int size = queue.size();
+            while (--size != 0) {
+                queue.offer(queue.poll());
+            }
+
+            Integer result = queue.poll();
+            queue.offer(result);
+            return result;
+        }
+
+        public boolean isEmpty() {
+            return queue.isEmpty();
+        }
+    }
+
+
 }
