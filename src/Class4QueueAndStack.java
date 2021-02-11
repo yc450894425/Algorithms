@@ -98,8 +98,9 @@ public class Class4QueueAndStack {
 
     public static class StackWithMin {
 
+        // The semantic of the first ele of minStack is the min value of stack.
         private Deque<Integer> stack;
-        private Deque<Pair> minStack;
+        private Deque<Integer> minStack;
 
         public StackWithMin() {
             stack = new ArrayDeque<>();
@@ -110,43 +111,26 @@ public class Class4QueueAndStack {
             if (stack.isEmpty()) {
                 return -1;
             }
-            if (stack.size() == minStack.peekFirst().size) {
+            Integer result = stack.pollFirst();
+            if (minStack.peekFirst().equals(result)) {
                 minStack.pollFirst();
             }
-            return stack.pollFirst();
+            return result;
         }
 
         public void push(int element) {
-
             stack.offerFirst(element);
-
-            if (minStack.isEmpty() || element < minStack.peek().minVal) {
-                minStack.offerFirst(new Pair(element, stack.size()));
+            if (minStack.isEmpty() || element <= minStack.peekFirst()) {
+                minStack.offerFirst(element);
             }
         }
 
         public int top() {
-            if (stack.isEmpty()) {
-                return -1;
-            }
-            return stack.peekFirst();
+            return stack.isEmpty() ? -1 : stack.peekFirst();
         }
 
         public int min() {
-            if (minStack.isEmpty()) {
-                return -1;
-            }
-            return minStack.peekFirst().minVal;
-        }
-
-        static class Pair {
-            public Integer minVal;
-            public Integer size;
-
-            public Pair(int minVal, int size) {
-                this.minVal = minVal;
-                this.size = size;
-            }
+            return minStack.isEmpty() ? -1 : minStack.peekFirst();
         }
     }
 
