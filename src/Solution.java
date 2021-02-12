@@ -7,18 +7,7 @@ import java.util.Map;
 public class Solution {
 
     public static void main(String[] args) {
-        MyLinkedList<Integer> linkedList = new MyLinkedList<>();
-        printMyLinkedList(linkedList);
-        linkedList.addAtHead(1);
-        linkedList.addAtTail(3);
-        linkedList.addAtIndex(1, 2);
-        printMyLinkedList(linkedList);
-        linkedList.deleteAtIndex(3);
-        printMyLinkedList(linkedList);
-        linkedList.addAtTail(4);
-        printMyLinkedList(linkedList);
-        linkedList.addAtHead(1);
-        printMyLinkedList(linkedList);
+
     }
 
     private static void printArray(int[] array) {
@@ -47,7 +36,7 @@ public class Solution {
         System.out.println("null");
     }
 
-    private static void printMyLinkedList(MyLinkedList linkedList) {
+    private static void printMyLinkedList(Practice4LinkedList.MyLinkedList linkedList) {
         int size = linkedList.getSize();
         for (int i = 0; i < size; i++) {
             System.out.print(linkedList.get(i) + " => ");
