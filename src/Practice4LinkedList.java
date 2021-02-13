@@ -1,5 +1,13 @@
 public class Practice4LinkedList {
-
+    /**
+     * Your MyLinkedList object will be instantiated and called as such:
+     * MyLinkedList obj = new MyLinkedList();
+     * int param_1 = obj.get(index);
+     * obj.addAtHead(val);
+     * obj.addAtTail(val);
+     * obj.addAtIndex(index,val);
+     * obj.deleteAtIndex(index);
+     */
     public static class MyLinkedList<E> {
 
         private MyListNode<E> head;
@@ -127,14 +135,4 @@ public class Practice4LinkedList {
             }
         }
     }
-
-/**
- * Your MyLinkedList object will be instantiated and called as such:
- * MyLinkedList obj = new MyLinkedList();
- * int param_1 = obj.get(index);
- * obj.addAtHead(val);
- * obj.addAtTail(val);
- * obj.addAtIndex(index,val);
- * obj.deleteAtIndex(index);
- */
 }

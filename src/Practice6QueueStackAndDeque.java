@@ -83,9 +83,11 @@ public class Practice6QueueStackAndDeque {
     // Implementing queue by circular array
     public static class QueueByCircularArray {
 
-        private int head; // next of head points to the head element of the queue;
+        // Elements are stored in the area [head, tail).
+        private int head; // head points to the head element of the queue;
         private int tail; // tail points to the next available position;
         private Integer[] array;
+        private int size;
 
         public QueueByCircularArray(int cap) {
             if (cap <= 0) {
@@ -95,9 +97,10 @@ public class Practice6QueueStackAndDeque {
                     e.printStackTrace();
                 }
             }
-            array = new Integer[cap + 1];
+            array = new Integer[cap];
             head = 0;
-            tail = 1;
+            tail = 0;
+            size = 0;
         }
 
         // user cannot push ‘null’ into the queue
@@ -107,6 +110,7 @@ public class Practice6QueueStackAndDeque {
             }
             array[tail] = ele;
             tail = tail + 1 == array.length ? 0 : tail + 1;
+            size++;
             return true;
         }
 
@@ -114,8 +118,9 @@ public class Practice6QueueStackAndDeque {
             if (isEmpty()) {
                 return null;
             }
-            Integer result = array[head + 1];
+            Integer result = array[head];
             head = (head + 1) % array.length;
+            size--;
             return result;
         }
 
@@ -123,24 +128,21 @@ public class Practice6QueueStackAndDeque {
             if (isEmpty()) {
                 return null;
             }
-            return array[head + 1];
+            return array[head];
         }
 
         public int size() {
-            if (tail > head) {
-                return tail - head - 1;
-            } else {
-                return array.length - (head - tail + 1);
-            }
+            return size;
         }
 
         public boolean isEmpty() {
-            return (head + 1) % array.length == tail;
+            return size == 0;
         }
         private boolean isFull() {
-            return head == tail;
+            return size == array.length;
         }
     }
+
 
     // Implementing stack by circular array
     public static class StackByCircularArray {
