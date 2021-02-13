@@ -7,7 +7,16 @@ import java.util.Map;
 public class Solution {
 
     public static void main(String[] args) {
-
+        Practice6QueueStackAndDeque.StackByCircularArray queue = new Practice6QueueStackAndDeque.StackByCircularArray(5);
+        System.out.println(queue.peek());
+        queue.offer(1);
+        queue.offer(2);
+        queue.offer(3);
+        queue.offer(4);
+        System.out.println("size: " + queue.size());
+        System.out.println(queue.offer(5));
+        System.out.println(queue.offer(6));
+        System.out.println(queue.poll());
     }
 
     private static void printArray(int[] array) {
