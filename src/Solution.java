@@ -17,6 +17,7 @@ public class Solution {
         System.out.println(queue.offer(5));
         System.out.println(queue.offer(6));
         System.out.println(queue.poll());
+
     }
 
     private static void printArray(int[] array) {
