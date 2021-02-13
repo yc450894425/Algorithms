@@ -7,17 +7,39 @@ import java.util.Map;
 public class Solution {
 
     public static void main(String[] args) {
-        Practice6QueueStackAndDeque.StackByCircularArray queue = new Practice6QueueStackAndDeque.StackByCircularArray(5);
-        System.out.println(queue.peek());
-        queue.offer(1);
-        queue.offer(2);
-        queue.offer(3);
-        queue.offer(4);
-        System.out.println("size: " + queue.size());
-        System.out.println(queue.offer(5));
-        System.out.println(queue.offer(6));
-        System.out.println(queue.poll());
-
+        Practice6QueueStackAndDeque.DequeByLinkedList queue = new Practice6QueueStackAndDeque.DequeByLinkedList();
+        System.out.println(queue.peekFirst());
+        queue.print();
+        queue.offerFirst(4);
+        queue.print();
+        queue.offerFirst(3);
+        queue.print();
+        queue.offerFirst(2);
+        queue.print();
+        queue.offerFirst(1);
+        queue.print();
+        queue.offerLast(5);
+        queue.print();
+        queue.offerLast(6);
+        queue.print();
+        queue.offerLast(7);
+        queue.print();
+        queue.offerLast(8);
+        queue.print();
+        queue.pollLast();
+        queue.print();
+        queue.pollLast();
+        queue.print();
+        queue.pollLast();
+        queue.print();
+        queue.pollLast();
+        queue.print();
+        queue.pollLast();
+        queue.print();
+        queue.pollFirst();
+        queue.print();
+        queue.pollFirst();
+        queue.print();
     }
 
     private static void printArray(int[] array) {
