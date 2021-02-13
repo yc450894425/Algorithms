@@ -3,10 +3,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+// quickSelect
 public class Solution {
 
     public static void main(String[] args) {
-        Practice6QueueStackAndDeque.QueueByCircularArray queue = new Practice6QueueStackAndDeque.QueueByCircularArray(5);
+        Practice6QueueStackAndDeque.StackByCircularArray queue = new Practice6QueueStackAndDeque.StackByCircularArray(5);
         System.out.println(queue.peek());
         queue.offer(1);
         queue.offer(2);
@@ -16,10 +17,7 @@ public class Solution {
         System.out.println(queue.offer(5));
         System.out.println(queue.offer(6));
         System.out.println(queue.poll());
-        System.out.println(queue.offer(6));
-        System.out.println(queue.poll());
-        System.out.println(queue.offer(7));
-        System.out.println(queue.offer(8));
+
     }
 
     private static void printArray(int[] array) {
