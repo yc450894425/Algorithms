@@ -1,6 +1,10 @@
 import javax.management.BadAttributeValueExpException;
 
 public class Practice6QueueStackAndDeque {
+
+    private static final int DEFAULT_CAPACITY = 8;
+    private static final double EXPAND_COEFFICIENT = 1.5;
+
     // Implementing stack by linked list
     public static class StackByLinkedList {
 
@@ -17,9 +21,11 @@ public class Practice6QueueStackAndDeque {
             head = node;
             size++;
         }
+
         public Integer peek() {
             return head == null ? null : head.value;
         }
+
         public Integer poll() {
             if (head == null) {
                 return null;
@@ -30,9 +36,11 @@ public class Practice6QueueStackAndDeque {
             size--;
             return prev.value;
         }
+
         public int size() {
             return size;
         }
+
         public boolean isEmpty() {
             return size == 0;
         }
@@ -61,6 +69,7 @@ public class Practice6QueueStackAndDeque {
         public Integer peek() {
             return head == null ? null : head.value;
         }
+
         public Integer poll() {
             if (head == null) {
                 return null;
@@ -72,64 +81,6 @@ public class Practice6QueueStackAndDeque {
             }
             return prev.value;
         }
-        public int size() {
-            return size;
-        }
-        public boolean isEmpty() {
-            return size == 0;
-        }
-    }
-
-    // Implementing queue by circular array
-    public static class QueueByCircularArray {
-
-        // Elements are stored in the area [head, tail).
-        private int head; // head points to the head element of the queue;
-        private int tail; // tail points to the next available position;
-        private Integer[] array;
-        private int size;
-
-        public QueueByCircularArray(int cap) {
-            if (cap <= 0) {
-                try {
-                    throw new BadAttributeValueExpException("Capability should be larger than Zero.");
-                } catch (BadAttributeValueExpException e) {
-                    e.printStackTrace();
-                }
-            }
-            array = new Integer[cap];
-            head = 0;
-            tail = 0;
-            size = 0;
-        }
-
-        // user cannot push ‘null’ into the queue
-        public boolean offer(int ele) {
-            if (isFull()) {
-                return false;
-            }
-            array[tail] = ele;
-            tail = tail + 1 == array.length ? 0 : tail + 1;
-            size++;
-            return true;
-        }
-
-        public Integer poll() {
-            if (isEmpty()) {
-                return null;
-            }
-            Integer result = array[head];
-            head = (head + 1) % array.length;
-            size--;
-            return result;
-        }
-
-        public Integer peek() {
-            if (isEmpty()) {
-                return null;
-            }
-            return array[head];
-        }
 
         public int size() {
             return size;
@@ -137,49 +88,6 @@ public class Practice6QueueStackAndDeque {
 
         public boolean isEmpty() {
             return size == 0;
-        }
-        private boolean isFull() {
-            return size == array.length;
-        }
-    }
-
-    // Implementing stack by circular array
-    public static class StackByCircularArray {
-
-        private int head; // head points to the newest element;
-        Integer[] array;
-
-        public StackByCircularArray(int cap) {
-            if (cap <= 0) {
-                try {
-                    throw new BadAttributeValueExpException("Capability should be larger than Zero.");
-                } catch (BadAttributeValueExpException e) {
-                    e.printStackTrace();
-                }
-            }
-            array = new Integer[cap];
-            head = -1;
-        }
-
-        public boolean offer(int ele) {
-            if (head == array.length - 1) {
-                return false;
-            }
-            array[++head] = ele;
-            return true;
-        }
-
-        public Integer poll() {
-            return head == -1 ? null : array[head--];
-        }
-        public Integer peek() {
-            return head == -1 ? null : array[head];
-        }
-        public int size() {
-            return head + 1;
-        }
-        public boolean isEmpty() {
-            return head == -1;
         }
     }
 
@@ -296,6 +204,113 @@ public class Practice6QueueStackAndDeque {
         }
     }
 
+    // Implementing stack by circular array
+    public static class StackByCircularArray {
+
+        private int head; // head points to the newest element;
+        private Integer[] array;
+
+        public StackByCircularArray(int cap) {
+            if (cap <= 0) {
+                try {
+                    throw new BadAttributeValueExpException("Capability should be larger than Zero.");
+                } catch (BadAttributeValueExpException e) {
+                    e.printStackTrace();
+                }
+            }
+            array = new Integer[cap];
+            head = -1;
+        }
+
+        public boolean offer(int ele) {
+            if (head == array.length - 1) {
+                return false;
+            }
+            array[++head] = ele;
+            return true;
+        }
+
+        public Integer poll() {
+            return head == -1 ? null : array[head--];
+        }
+
+        public Integer peek() {
+            return head == -1 ? null : array[head];
+        }
+
+        public int size() {
+            return head + 1;
+        }
+
+        public boolean isEmpty() {
+            return head == -1;
+        }
+    }
+
+    // Implementing queue by circular array
+    public static class QueueByCircularArray {
+
+        // Elements are stored in the area [head, tail).
+        private int head; // head points to the head element of the queue;
+        private int tail; // tail points to the next available position;
+        private Integer[] array;
+        private int size;
+
+        public QueueByCircularArray(int cap) {
+            if (cap <= 0) {
+                try {
+                    throw new BadAttributeValueExpException("Capability should be larger than Zero.");
+                } catch (BadAttributeValueExpException e) {
+                    e.printStackTrace();
+                }
+            }
+            array = new Integer[cap];
+            head = 0;
+            tail = 0;
+            size = 0;
+        }
+
+        // user cannot push ‘null’ into the queue
+        public boolean offer(int ele) {
+            if (isFull()) {
+                return false;
+            }
+            array[tail] = ele;
+            tail = tail + 1 == array.length ? 0 : tail + 1;
+            size++;
+            return true;
+        }
+
+        public Integer poll() {
+            if (isEmpty()) {
+                return null;
+            }
+            Integer result = array[head];
+            head = (head + 1) % array.length;
+            size--;
+            return result;
+        }
+
+        public Integer peek() {
+            if (isEmpty()) {
+                return null;
+            }
+            return array[head];
+        }
+
+        public int size() {
+            return size;
+        }
+
+        public boolean isEmpty() {
+            return size == 0;
+        }
+
+        private boolean isFull() {
+            return size == array.length;
+        }
+    }
+
     // Implementing Deque by circular array
     public static class DequeByCircularArray {
         // Area (head, tail) stores elements;
@@ -311,12 +326,16 @@ public class Practice6QueueStackAndDeque {
             tail = 1;
         }
 
+        public DequeByCircularArray() {
+            this(DEFAULT_CAPACITY);
+        }
+
         public boolean offerFirst(int ele) {
             if (isFull()) {
-                return false;
+                resize();
             }
             array[head] = ele;
-            head = head == 0? array.length - 1 : head - 1;
+            head = head == 0 ? array.length - 1 : head - 1;
             size++;
             return true;
         }
@@ -339,7 +358,7 @@ public class Practice6QueueStackAndDeque {
 
         public boolean offerLast(int ele) {
             if (isFull()) {
-                return false;
+                resize();
             }
             array[tail] = ele;
             tail = (tail + 1) % array.length;
@@ -384,6 +403,18 @@ public class Practice6QueueStackAndDeque {
             }
             System.out.println(" tail");
         }
+
+        private void resize() {
+            Integer[] oldArray = array;
+            array = new Integer[(int) (oldArray.length * EXPAND_COEFFICIENT)];
+            int oldindex = (head + 1) % oldArray.length;
+            for (int i = 1; i <= size; i++) {
+                array[i] = oldArray[oldindex];
+                oldindex = (oldindex + 1) % oldArray.length;
+            }
+            head = 0;
+            tail = (size + 1) % array.length;
+        }
     }
 
     // 614. Design Circular Queue
@@ -407,7 +438,9 @@ public class Practice6QueueStackAndDeque {
         private Integer[] array;
         private int size;
 
-        /** Initialize your data structure here. Set the size of the queue to be k. */
+        /**
+         * Initialize your data structure here. Set the size of the queue to be k.
+         */
         public MyCircularQueue(int k) {
             array = new Integer[k];
             head = 0;
@@ -415,7 +448,9 @@ public class Practice6QueueStackAndDeque {
             size = 0;
         }
 
-        /** Insert an element into the circular queue. Return true if the operation is successful. */
+        /**
+         * Insert an element into the circular queue. Return true if the operation is successful.
+         */
         public boolean enQueue(int value) {
             if (isFull()) {
                 return false;
@@ -426,7 +461,9 @@ public class Practice6QueueStackAndDeque {
             return true;
         }
 
-        /** Delete an element from the circular queue. Return true if the operation is successful. */
+        /**
+         * Delete an element from the circular queue. Return true if the operation is successful.
+         */
         public boolean deQueue() {
             if (isEmpty()) {
                 return false;
@@ -437,7 +474,9 @@ public class Practice6QueueStackAndDeque {
             return true;
         }
 
-        /** Get the front item from the queue. */
+        /**
+         * Get the front item from the queue.
+         */
         public int Front() {
             if (isEmpty()) {
                 return -1;
@@ -445,7 +484,9 @@ public class Practice6QueueStackAndDeque {
             return array[head];
         }
 
-        /** Get the last item from the queue. */
+        /**
+         * Get the last item from the queue.
+         */
         public int Rear() {
             if (isEmpty()) {
                 return -1;
@@ -453,15 +494,136 @@ public class Practice6QueueStackAndDeque {
             return tail == 0 ? array[array.length - 1] : array[tail - 1];
         }
 
-        /** Checks whether the circular queue is empty or not. */
+        /**
+         * Checks whether the circular queue is empty or not.
+         */
         public boolean isEmpty() {
             return size == 0;
         }
 
-        /** Checks whether the circular queue is full or not. */
+        /**
+         * Checks whether the circular queue is full or not.
+         */
         public boolean isFull() {
             return size == array.length;
         }
     }
 
+    // 613. Design Circular Deque
+    // https://app.laicode.io/app/problem/613
+    public static class MyCircularDeque {
+
+        /**
+         * Your MyCircularDeque object will be instantiated and called as such:
+         * MyCircularDeque obj = new MyCircularDeque(k);
+         * boolean param_1 = obj.insertFront(value);
+         * boolean param_2 = obj.insertLast(value);
+         * boolean param_3 = obj.deleteFront();
+         * boolean param_4 = obj.deleteLast();
+         * int param_5 = obj.getFront();
+         * int param_6 = obj.getRear();
+         * boolean param_7 = obj.isEmpty();
+         * boolean param_8 = obj.isFull();
+         */
+
+        // (head, tail) is elements storage area;
+        private int head; // head points to the next available position at the front end;
+        private int tail; // tail points to the next available position at the last end;
+        private int size;
+        private Integer[] array;
+
+        /**
+         * Initialize your data structure here. Set the size of the deque to be k.
+         */
+        public MyCircularDeque(int k) {
+            array = new Integer[k];
+            head = 0;
+            tail = 1;
+            size = 0;
+        }
+
+        /**
+         * Adds an item at the front of Deque. Return true if the operation is successful.
+         */
+        public boolean insertFront(int value) {
+            if (isFull()) {
+                return false;
+            }
+            array[head] = value;
+            head = head == 0 ? array.length - 1 : head - 1;
+            size++;
+            return true;
+        }
+
+        /**
+         * Adds an item at the rear of Deque. Return true if the operation is successful.
+         */
+        public boolean insertLast(int value) {
+            if (isFull()) {
+                return false;
+            }
+            array[tail] = value;
+            tail = (tail + 1) % array.length;
+            size++;
+            return true;
+        }
+
+        /**
+         * Deletes an item from the front of Deque. Return true if the operation is successful.
+         */
+        public boolean deleteFront() {
+            if (isEmpty()) {
+                return false;
+            }
+            head = (head + 1) % array.length;
+            size--;
+            return true;
+        }
+
+        /**
+         * Deletes an item from the rear of Deque. Return true if the operation is successful.
+         */
+        public boolean deleteLast() {
+            if (isEmpty()) {
+                return false;
+            }
+            tail = tail == 0 ? array.length - 1 : tail - 1;
+            size--;
+            return true;
+        }
+
+        /**
+         * Get the front item from the deque.
+         */
+        public int getFront() {
+            if (isEmpty()) {
+                return -1;
+            }
+            return array[(head + 1) % array.length];
+        }
+
+        /**
+         * Get the last item from the deque.
+         */
+        public int getRear() {
+            if (isEmpty()) {
+                return -1;
+            }
+            return array[tail == 0 ? array.length - 1 : tail - 1];
+        }
+
+        /**
+         * Checks whether the circular deque is empty or not.
+         */
+        public boolean isEmpty() {
+            return size == 0;
+        }
+
+        /**
+         * Checks whether the circular deque is full or not.
+         */
+        public boolean isFull() {
+            return size == array.length;
+        }
+    }
 }

@@ -7,7 +7,7 @@ import java.util.Map;
 public class Solution {
 
     public static void main(String[] args) {
-        Practice6QueueStackAndDeque.DequeByCircularArray queue = new Practice6QueueStackAndDeque.DequeByCircularArray(8);
+        Practice6QueueStackAndDeque.DequeByCircularArray queue = new Practice6QueueStackAndDeque.DequeByCircularArray(4);
         System.out.println(queue.peekFirst());
         queue.print();
         queue.offerFirst(4);
@@ -26,8 +26,6 @@ public class Solution {
         queue.print();
         queue.offerLast(8);
         queue.print();
-        System.out.println(queue.offerFirst(9));
-        System.out.println(queue.offerFirst(10));
         queue.pollLast();
         queue.print();
         queue.pollLast();
