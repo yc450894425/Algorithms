@@ -183,84 +183,6 @@ public class Practice6QueueStackAndDeque {
         }
     }
 
-    // 614. Design Circular Queue
-    // https://app.laicode.io/app/problem/614
-    public static class MyCircularQueue {
-
-        /**
-         * Your MyCircularQueue object will be instantiated and called as such:
-         * MyCircularQueue obj = new MyCircularQueue(k);
-         * boolean param_1 = obj.enQueue(value);
-         * boolean param_2 = obj.deQueue();
-         * int param_3 = obj.Front();
-         * int param_4 = obj.Rear();
-         * boolean param_5 = obj.isEmpty();
-         * boolean param_6 = obj.isFull();
-         */
-
-        // Elements are stored in the area [head, tail).
-        private int head; // head points to the head element of the queue;
-        private int tail; // tail points to the next available position;
-        private Integer[] array;
-        private int size;
-
-        /** Initialize your data structure here. Set the size of the queue to be k. */
-        public MyCircularQueue(int k) {
-            array = new Integer[k];
-            head = 0;
-            tail = 0;
-            size = 0;
-        }
-
-        /** Insert an element into the circular queue. Return true if the operation is successful. */
-        public boolean enQueue(int value) {
-            if (isFull()) {
-                return false;
-            }
-            array[tail] = value;
-            tail = tail + 1 == array.length ? 0 : tail + 1;
-            size++;
-            return true;
-        }
-
-        /** Delete an element from the circular queue. Return true if the operation is successful. */
-        public boolean deQueue() {
-            if (isEmpty()) {
-                return false;
-            }
-            Integer result = array[head];
-            head = (head + 1) % array.length;
-            size--;
-            return true;
-        }
-
-        /** Get the front item from the queue. */
-        public int Front() {
-            if (isEmpty()) {
-                return -1;
-            }
-            return array[head];
-        }
-
-        /** Get the last item from the queue. */
-        public int Rear() {
-            if (isEmpty()) {
-                return -1;
-            }
-            return tail == 0 ? array[array.length - 1] : array[tail - 1];
-        }
-
-        /** Checks whether the circular queue is empty or not. */
-        public boolean isEmpty() {
-            return size == 0;
-        }
-
-        /** Checks whether the circular queue is full or not. */
-        public boolean isFull() {
-            return size == array.length;
-        }
-    }
-
     // Implementing Deque by linked list
     public static class DequeByLinkedList {
 
@@ -371,6 +293,174 @@ public class Practice6QueueStackAndDeque {
                 cur = cur.next;
             }
             System.out.println(" Last");
+        }
+    }
+
+    // Implementing Deque by circular array
+    public static class DequeByCircularArray {
+        // Area (head, tail) stores elements;
+        private int head; // head points to the next available position at the head side;
+        private int tail; // tail points to the next available position at the tail side;
+        private int size;
+        private Integer[] array;
+
+        public DequeByCircularArray(int cap) {
+            array = new Integer[cap];
+            size = 0;
+            head = 0;
+            tail = 1;
+        }
+
+        public boolean offerFirst(int ele) {
+            if (isFull()) {
+                return false;
+            }
+            array[head] = ele;
+            head = head == 0? array.length - 1 : head - 1;
+            size++;
+            return true;
+        }
+
+        public Integer pollFirst() {
+            if (isEmpty()) {
+                return null;
+            }
+            head = (head + 1) % array.length;
+            size--;
+            return array[head];
+        }
+
+        public Integer peekFirst() {
+            if (isEmpty()) {
+                return null;
+            }
+            return array[(head + 1) % array.length];
+        }
+
+        public boolean offerLast(int ele) {
+            if (isFull()) {
+                return false;
+            }
+            array[tail] = ele;
+            tail = (tail + 1) % array.length;
+            size++;
+            return true;
+        }
+
+        public Integer pollLast() {
+            if (isEmpty()) {
+                return null;
+            }
+            tail = tail == 0 ? array.length - 1 : tail - 1;
+            size--;
+            return array[tail];
+        }
+
+        public Integer peekLast() {
+            if (isEmpty()) {
+                return null;
+            }
+            return array[tail == 0 ? array.length - 1 : tail - 1];
+        }
+
+        public int size() {
+            return size;
+        }
+
+        public boolean isEmpty() {
+            return size == 0;
+        }
+
+        private boolean isFull() {
+            return size == array.length;
+        }
+
+        public void print() {
+            int index = (head + 1) % array.length;
+            System.out.print("head");
+            for (int i = 0; i < size; i++) {
+                System.out.print(" " + array[index]);
+                index = (index + 1) % array.length;
+            }
+            System.out.println(" tail");
+        }
+    }
+
+    // 614. Design Circular Queue
+    // https://app.laicode.io/app/problem/614
+    public static class MyCircularQueue {
+
+        /**
+         * Your MyCircularQueue object will be instantiated and called as such:
+         * MyCircularQueue obj = new MyCircularQueue(k);
+         * boolean param_1 = obj.enQueue(value);
+         * boolean param_2 = obj.deQueue();
+         * int param_3 = obj.Front();
+         * int param_4 = obj.Rear();
+         * boolean param_5 = obj.isEmpty();
+         * boolean param_6 = obj.isFull();
+         */
+
+        // Elements are stored in the area [head, tail).
+        private int head; // head points to the head element of the queue;
+        private int tail; // tail points to the next available position;
+        private Integer[] array;
+        private int size;
+
+        /** Initialize your data structure here. Set the size of the queue to be k. */
+        public MyCircularQueue(int k) {
+            array = new Integer[k];
+            head = 0;
+            tail = 0;
+            size = 0;
+        }
+
+        /** Insert an element into the circular queue. Return true if the operation is successful. */
+        public boolean enQueue(int value) {
+            if (isFull()) {
+                return false;
+            }
+            array[tail] = value;
+            tail = tail + 1 == array.length ? 0 : tail + 1;
+            size++;
+            return true;
+        }
+
+        /** Delete an element from the circular queue. Return true if the operation is successful. */
+        public boolean deQueue() {
+            if (isEmpty()) {
+                return false;
+            }
+            Integer result = array[head];
+            head = (head + 1) % array.length;
+            size--;
+            return true;
+        }
+
+        /** Get the front item from the queue. */
+        public int Front() {
+            if (isEmpty()) {
+                return -1;
+            }
+            return array[head];
+        }
+
+        /** Get the last item from the queue. */
+        public int Rear() {
+            if (isEmpty()) {
+                return -1;
+            }
+            return tail == 0 ? array[array.length - 1] : array[tail - 1];
+        }
+
+        /** Checks whether the circular queue is empty or not. */
+        public boolean isEmpty() {
+            return size == 0;
+        }
+
+        /** Checks whether the circular queue is full or not. */
+        public boolean isFull() {
+            return size == array.length;
         }
     }
 
