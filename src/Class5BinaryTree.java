@@ -1,3 +1,4 @@
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -107,5 +108,41 @@ public class Class5BinaryTree {
         // recursive rules
         return isSymmetric(one.left, two.right) && isSymmetric(one.right, two.left);
     }
+
+    /**Worst case: original input trees are balanced.
+    Time complexity: O(1 + 4 + 4^2 + 4^3 + ... + 4^(log2n)) = O(4^(log2n)) = O(2^(2log2n)) = O(2^(log2(n^2))) = O(n^2)
+    What if the input trees are not balanced?
+    Then time complexity will be far smaller than O(n^2).
+    Assuming two linked lists, time complexity is O(n).**/
+    public static boolean isTweakedIdentical(TreeNode one, TreeNode two) {
+        // corner cases
+        if (one == null && two == null) {
+            return true;
+        }
+        if (one == null || two == null || one.key != two.key) {
+            return false;
+        }
+
+        // recursive rules
+        return isTweakedIdentical(one.left, two.left) && isTweakedIdentical(one.right, two.right) || isTweakedIdentical(one.left, two.right) && isTweakedIdentical(one.right, two.left);
+    }
+
+    public static boolean isBST(TreeNode root) {
+        return isBST(root, Integer.MAX_VALUE, Integer.MIN_VALUE);
+    }
+
+    private static boolean isBST(TreeNode root, int max, int min) {
+        // base cases
+        if (root == null) {
+            return true;
+        }
+
+        // recursive rules
+        if (root.key >= max || root.key <= min) {
+            return false;
+        }
+        return isBST(root.left, root.key, min) && isBST(root.right, max, root.key);
+    }
+
 
 }
