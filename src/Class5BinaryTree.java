@@ -71,7 +71,6 @@ public class Class5BinaryTree {
     }
 
     public static boolean isBalanced(TreeNode root) {
-
         return findHeightAndBalanced(root) != -1;
     }
     // The semantic of the method is to return the height of the tree. Specifically, return -1 if the tree is not balanced.
@@ -144,5 +143,118 @@ public class Class5BinaryTree {
         return isBST(root.left, root.key, min) && isBST(root.right, max, root.key);
     }
 
+    // iterative
+    public static TreeNode search(TreeNode root, int key) {
+
+        TreeNode cur = root;
+        while (cur != null ||cur.key != key) {
+            cur = cur.key > key ? cur.left : cur.right;
+        }
+        return cur;
+    }
+
+    // peek before going down
+    public static TreeNode insertIterative1(TreeNode root, int key) {
+        // corner cases
+        if (root == null) {
+            return new TreeNode(key);
+        }
+        TreeNode cur = root;
+        while (cur.key != key) {
+            if (key < cur.key) {
+                if (cur.left == null) {
+                    cur.left = new TreeNode(key);
+                }
+                cur = cur.left;
+            } else {
+                if (cur.right == null) {
+                    cur.right = new TreeNode(key);
+                }
+                cur = cur.right;
+            }
+        }
+        return root;
+    }
+
+//    use a prev pointer
+//    DS: prev: records cur’s value in last iteration.
+//            Initialization: TreeNode cur = root; TreeNode prev = null;
+//    For each step:
+//            if cur.key == key, return root;
+//            if key < cur.key, prev = cur, cur = cur.left;
+//            if key > cur.key, prev = cur, cur = cur.right;
+//    Termination condition:
+//        cur == null
+//    Post-processing:
+//            if key < prev.key, prev.left = new TreeNode(key);
+//            if key > prev.key, prev.right = new TreeNode(key);
+    public static TreeNode insertIterative2(TreeNode root, int key) {
+        // corner cases
+        if (root == null) {
+            return new TreeNode(key);
+        }
+
+        TreeNode cur = root;
+        TreeNode prev = null;
+
+        while (cur != null) {
+            prev = cur;
+            if (cur.key == key) {
+                return root;
+            } else if (key < cur.key) {
+                cur = cur.left;
+            } else {
+                cur = cur.right;
+            }
+        }
+
+        if (key < prev.key) {
+            prev.left = new TreeNode(key);
+        } else {
+            prev.right = new TreeNode(key);
+        }
+        return root;
+    }
+
+    // The semantic of the method is to insert the key into the input BST, then return the root of the tree.
+    public static TreeNode insertRecursive1(TreeNode root, int key) {
+        // base cases
+        if (root == null) {
+            return new TreeNode(key);
+        }
+
+        // recursive rules
+        if (key < root.key) {
+            root.left = insertRecursive1(root.left, key);
+        } else if (key > root.key) {
+            root.right = insertRecursive1(root.right, key);
+        }
+        return root;
+    }
+
+    // Tail recursion. Not good practice. Do NOT use this.
+    public static TreeNode insertRecursive2(TreeNode root, int key) {
+        // corner cases
+        if (root == null) {
+            return new TreeNode(key);
+        }
+        insertRecursive2Helper(root, key);
+        return root;
+    }
+    public static void insertRecursive2Helper(TreeNode root, int key) {
+        if (root.key == key) {
+            return;
+        } else if (key < root.key) {
+            if (root.left == null) {
+                root.left = new TreeNode(key);
+            }
+            insertRecursive2Helper(root.left, key);
+        } else {
+            if (root.right == null) {
+                root.right = new TreeNode(key);
+            }
+            insertRecursive2Helper(root.right, key);
+        }
+    }
 
 }
