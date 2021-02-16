@@ -144,13 +144,22 @@ public class Class5BinaryTree {
     }
 
     // iterative
-    public static TreeNode search(TreeNode root, int key) {
-
+    public static TreeNode searchIterative(TreeNode root, int key) {
         TreeNode cur = root;
-        while (cur != null ||cur.key != key) {
-            cur = cur.key > key ? cur.left : cur.right;
+        while (cur != null && cur.key != key) {
+            cur = key < cur.key ? cur.left : cur.right;
         }
         return cur;
+    }
+
+    // recursive
+    public static TreeNode searchRecursive(TreeNode root, int key) {
+        // base cases
+        if (root == null || root.key == key) {
+            return root;
+        }
+        // recursive rules
+        return searchRecursive(key < root.key ? root.left : root.right, key);
     }
 
     // peek before going down
