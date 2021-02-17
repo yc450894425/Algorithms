@@ -266,4 +266,42 @@ public class Class5BinaryTree {
         }
     }
 
+//    				            5
+//                            /		\
+//                            2		7
+//                        /	\		/	\
+//                        1	4		6	8
+//
+//            range[2, 6]
+//            2, 4, 5, 6
+    public static List<Integer> getRange(TreeNode root, int min, int max) {
+        List<Integer> result = new ArrayList<>();
+        getRangeHelper(root, result, min, max);
+        return result;
+    }
+    // The semantic of getRangeHelper is to add all keys in range [min, max] under root into the list result.
+    private static void getRangeHelper(TreeNode root, List<Integer> result, int min, int max) {
+        // base cases
+        if (root == null) {
+            return;
+        }
+//        recursive rules
+//        root.key > min. Not >=.
+//        Because since there are no duplicates, when root.key == min,
+//        all keys in root’s left subtree must be smaller than min,
+//        which means all keys in root’s left subtree are not in range [min, max].
+        if (root.key > min) {
+            getRangeHelper(root.left, result, min, max);
+        }
+
+        if (root.key >= min && root.key <= max) {
+            result.add(root.key);
+        }
+
+        if (root.key < max) { // Not <=.
+            getRangeHelper(root.right, result, min, max);
+        }
+    }
+
+
 }
