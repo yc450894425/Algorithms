@@ -73,6 +73,7 @@ public class Class5BinaryTree {
     public static boolean isBalanced(TreeNode root) {
         return findHeightAndBalanced(root) != -1;
     }
+
     // The semantic of the method is to return the height of the tree. Specifically, return -1 if the tree is not balanced.
     private static int findHeightAndBalanced(TreeNode root) {
         // base cases
@@ -108,11 +109,13 @@ public class Class5BinaryTree {
         return isSymmetric(one.left, two.right) && isSymmetric(one.right, two.left);
     }
 
-    /**Worst case: original input trees are balanced.
-    Time complexity: O(1 + 4 + 4^2 + 4^3 + ... + 4^(log2n)) = O(4^(log2n)) = O(2^(2log2n)) = O(2^(log2(n^2))) = O(n^2)
-    What if the input trees are not balanced?
-    Then time complexity will be far smaller than O(n^2).
-    Assuming two linked lists, time complexity is O(n).**/
+    /**
+     * Worst case: original input trees are balanced.
+     * Time complexity: O(1 + 4 + 4^2 + 4^3 + ... + 4^(log2n)) = O(4^(log2n)) = O(2^(2log2n)) = O(2^(log2(n^2))) = O(n^2)
+     * What if the input trees are not balanced?
+     * Then time complexity will be far smaller than O(n^2).
+     * Assuming two linked lists, time complexity is O(n).
+     **/
     public static boolean isTweakedIdentical(TreeNode one, TreeNode two) {
         // corner cases
         if (one == null && two == null) {
@@ -185,7 +188,7 @@ public class Class5BinaryTree {
         return root;
     }
 
-//    use a prev pointer
+    //    use a prev pointer
 //    DS: prev: records cur’s value in last iteration.
 //            Initialization: TreeNode cur = root; TreeNode prev = null;
 //    For each step:
@@ -250,6 +253,7 @@ public class Class5BinaryTree {
         insertRecursive2Helper(root, key);
         return root;
     }
+
     public static void insertRecursive2Helper(TreeNode root, int key) {
         if (root.key == key) {
             return;
@@ -266,7 +270,7 @@ public class Class5BinaryTree {
         }
     }
 
-//    				            5
+    //    				            5
 //                            /		\
 //                            2		7
 //                        /	\		/	\
@@ -301,6 +305,58 @@ public class Class5BinaryTree {
         if (root.key < max) { // Not <=.
             getRangeHelper(root.right, result, min, max);
         }
+    }
+
+//    step one: find target.
+//    step two: delete it.
+//            1. Target has no children: just delete it;
+//            2. Target has only one side child: replace target with its child
+//            3. Target has both left and right children:
+//                find smallest in right subtree or largest in left subtree.\
+//                Here we choose smallest in right subtree.
+//                3.1. target.right has no left child: target.right is the smallest, move target.left to target.right.left, then return target.right;
+//	              3.2. target.right has left child: find smallest under target.right.left;
+    // The semantic of deleteTree is delete key from input tree and return the root of the tree.
+    public static TreeNode deleteTree(TreeNode root, int key) {
+        // base cases
+        if (root == null) {
+            return null;
+        }
+
+        // recursive rules
+        if (key == root.key) {
+            if (root.left == null) {
+                return root.right;
+            } else if (root.right == null) {
+                return root.left;
+            } else if (root.right.left == null) {
+                root.right.left = root.left;
+                return root.right;
+            } else {
+                TreeNode newNode = getSmallest(root.right, key);
+                newNode.left = root.left;
+                newNode.right = root.right;
+                root.left = null;
+                root.right = null;
+                return newNode;
+            }
+        }
+
+        if (key < root.key) {
+            root.left = deleteTree(root.left, key);
+        } else if (key > root.key) {
+            root.right = deleteTree(root.right, key);
+        }
+        return root;
+    }
+
+    private static TreeNode getSmallest(TreeNode root, int key) {
+        while (root.left.left != null) {
+            root = root.left;
+        }
+        TreeNode smallest = root.left;
+        root.left = root.left.right;
+        return smallest;
     }
 
 
