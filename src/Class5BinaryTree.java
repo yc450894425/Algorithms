@@ -1,5 +1,8 @@
+import java.lang.annotation.Target;
 import java.sql.Time;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 
 public class Class5BinaryTree {
@@ -359,5 +362,85 @@ public class Class5BinaryTree {
         return smallest;
     }
 
+    public static List<Integer> preOrderIterative(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        // corner cases
+        if (root == null) {
+            return result;
+        }
 
+        Deque<TreeNode> stack = new ArrayDeque<>();
+        stack.offerFirst(root);
+        while (!stack.isEmpty()) {
+            TreeNode cur = stack.pollFirst();
+            result.add(cur.key);
+            if (cur.right != null) {
+                stack.offerFirst(cur.right);
+            }
+            if (cur.left != null) {
+                stack.offerFirst(cur.left);
+            }
+        }
+        return result;
+    }
+
+    // The semantic of cur is the next node to visit.
+// When cur is not null, we should traverse the subtree whose root is cur, so we push cur and go left;
+// When cur is null, which means the left subtree of the top node in the stack has been printed, we can just poll and print the top node in the stack and go right;
+    public static List<Integer> inOrderIterative(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        Deque<TreeNode> stack = new ArrayDeque<>();
+        TreeNode cur = root;
+        while (!stack.isEmpty() || cur != null) {
+            // if cur != null, push it into stack, cur = cur.left;
+            // if cur == null, cur = poll, print cur, cur = cur.right
+            if (cur != null) {
+                stack.offerFirst(cur);
+                cur = cur.left;
+            } else {
+                cur = stack.pollFirst();
+                result.add(cur.key);
+                cur = cur.right;
+            }
+        }
+        return result;
+    }
+
+    // For every node, we must print all elements in its left subtree, then print all elements in its right subtree, and finally print itself.
+// We maintain a prev node, to record the previous visiting node on the traversing path, so that we know what the direction we are taking now and what is the direction we are taking next.
+// cur is the top element in the stack.
+// prev is cur in the last iteration.
+// prev == null: going down (left subtree has priority)
+// prev == cur.parent: going down (left subtree has priority)
+// prev == cur.left: left subtree finished (right subtree has priority)
+// prev == cur.right: right subtree finished (print cur)
+    public static List<Integer> postOrderIterative(TreeNode root) {
+        List<Integer> result = new ArrayList<>();
+        // corner cases
+        if (root == null) {
+            return result;
+        }
+        Deque<TreeNode> stack = new ArrayDeque<>();
+        stack.offerFirst(root);
+        TreeNode prev = null;
+
+        while (!stack.isEmpty()) {
+            TreeNode cur = stack.peekFirst();
+            if (prev == null || prev.left == cur || prev.right == cur) {
+                if (cur.left != null) {
+                    stack.offerFirst(cur.left);
+                } else if (cur.right != null) {
+                    stack.offerFirst(cur.right);
+                } else {
+                    result.add(stack.pollFirst().key);
+                }
+            } else if (prev == cur.left && cur.right != null) {
+                stack.offerFirst(cur.right);
+            } else {
+                result.add(stack.pollFirst().key);
+            }
+            prev = cur;
+        }
+        return result;
+    }
 }
