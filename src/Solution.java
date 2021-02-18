@@ -7,39 +7,8 @@ import java.util.Map;
 public class Solution {
 
     public static void main(String[] args) {
-        Practice6QueueStackAndDeque.DequeByCircularArray queue = new Practice6QueueStackAndDeque.DequeByCircularArray(4);
-        System.out.println(queue.peekFirst());
-        queue.print();
-        queue.offerFirst(4);
-        queue.print();
-        queue.offerFirst(3);
-        queue.print();
-        queue.offerFirst(2);
-        queue.print();
-        queue.offerFirst(1);
-        queue.print();
-        queue.offerLast(5);
-        queue.print();
-        queue.offerLast(6);
-        queue.print();
-        queue.offerLast(7);
-        queue.print();
-        queue.offerLast(8);
-        queue.print();
-        queue.pollLast();
-        queue.print();
-        queue.pollLast();
-        queue.print();
-        queue.pollLast();
-        queue.print();
-        queue.pollLast();
-        queue.print();
-        queue.pollLast();
-        queue.print();
-        queue.pollFirst();
-        queue.print();
-        queue.pollFirst();
-        queue.print();
+        printArray(Class6HeapAndGraphSearchAlgorithmsI.kSmallestSolution3(new int[]{8, 2, 6, 3, 5, 7, 12, 52}, 5));
+
     }
 
     private static void printArray(int[] array) {
