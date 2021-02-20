@@ -126,57 +126,113 @@ public class Class6HeapAndGraphSearchAlgorithmsI {
         array[j] = tmp;
     }
 
-    public static Set<GraphNode> DijkstraWithoutPathSolution1(GraphNode start) {
-        Set<GraphNode> expanded = new HashSet<>();
-        Set<GraphNode> generated = new HashSet<>();
+    public static Set<DijGraphNode> DijkstraWithoutPathSolution1(DijGraphNode start) {
+        Set<DijGraphNode> expanded = new HashSet<>();
+        Set<DijGraphNode> generated = new HashSet<>();
         // corner cases
         if (start == null) {
             return expanded;
         }
-        PriorityQueue<GraphNode> minHeap = new PriorityQueue<>(new Comparator<GraphNode>() {
+        PriorityQueue<DijGraphNode> minHeap = new PriorityQueue<>(new Comparator<DijGraphNode>() {
             @Override
-            public int compare(GraphNode o1, GraphNode o2) {
-                if (o1.distance == o2.distance) {
+            public int compare(DijGraphNode o1, DijGraphNode o2) {
+                if (o1.distance.equals(o2.distance)) {
                     return 0;
                 }
                 return o1.distance < o2.distance ? -1 : 1;
             }
         });
+        start.distance = 0;
         minHeap.offer(start);
         generated.add(start);
         while (!minHeap.isEmpty()) {
-            GraphNode cur = minHeap.poll();
+            DijGraphNode cur = minHeap.poll();
             expanded.add(cur);
-            for (GraphNode nei : cur.neighbors.keySet()) {
-//              if nei has been expanded, do noting;
-                if (expanded.contains(nei)) {
-                    continue;
-                } else if (!generated.contains(nei) || cur.distance + cur.neighbors.get(nei) < nei.distance) {
-//              if nei has been generated and distance can be shortened, regenerate it;
-//              if nei hasn't been generated, generate it;
-                    nei.distance = cur.distance + cur.neighbors.get(nei);
+            for (DijGraphNode nei : cur.neighbors.keySet()) {
+                // case 1: nei has been expanded, do nothing;
+                // case 2: nei hasn't been expanded or generated, it's distance = cur.distance + cur.neighbors.get(nei), enqueue it (generate);
+                // case 3: nei has been generated and its distance <= cur.distance + cur.neighbors.get(nei), do nothing;
+                // case 4: nei has been generated and its distance > cur.distance + cur.neighbors.get(nei), replace its distance (re-generate);
+                 if (!expanded.contains(nei) && (!generated.contains(nei) || cur.distance + cur.neighbors.get(nei) < nei.distance)) {
+                     nei.distance = cur.distance + cur.neighbors.get(nei);
+                     if (!generated.contains(nei)) {
+                         generated.add(nei);
+                         minHeap.offer(nei);
+                     }
                 }
             }
         }
         return expanded;
     }
 
-    public static Set<GraphNode> DijkstraWithoutPathSolution2(GraphNode start) {
-        Set<GraphNode> expanded = new HashSet<>();
+    public static Set<DijGraphNode> DijkstraWithoutPathSolution2(DijGraphNode start) {
+        Set<DijGraphNode> expanded = new HashSet<>();
         // corner cases
         if (start == null) {
             return expanded;
         }
-        PriorityQueue<GraphNode> minHeap = new PriorityQueue<>(new Comparator<GraphNode>() {
+        PriorityQueue<DijGraphNode> minHeap = new PriorityQueue<>(new Comparator<DijGraphNode>() {
             @Override
-            public int compare(GraphNode o1, GraphNode o2) {
-                if (o1.distance == o2.distance) {
+            public int compare(DijGraphNode o1, DijGraphNode o2) {
+                if (o1.distance.equals(o2.distance)) {
                     return 0;
                 }
                 return o1.distance < o2.distance ? -1 : 1;
             }
         });
+        start.distance = 0;
+        minHeap.offer(start);
+        while (!minHeap.isEmpty()) {
+            DijGraphNode cur = minHeap.poll();
+            expanded.add(cur);
+            for (DijGraphNode nei : cur.neighbors.keySet()) {
+                // case 1: nei has been expanded, do nothing;
+                // case 2: nei hasn't been expanded or generated, it's distance = cur.distance + cur.neighbors.get(nei), enqueue it (generate);
+                // case 3: nei has been generated and its distance <= cur.distance + cur.neighbors.get(nei), do nothing;
+                // case 4: nei has been generated and its distance > cur.distance + cur.neighbors.get(nei), replace its distance (re-generate);
+                Integer neiDis = cur.distance + cur.neighbors.get(nei);
+                if (!expanded.contains(nei) && (nei.distance == null || nei.distance > neiDis)) {
+                    nei.distance = neiDis;
+                    minHeap.offer(nei); // not necessary when nei.distance != null, not harmful although.
+                }
+            }
+        }
+        return expanded;
     }
 
-    public static Map<GraphNode, Integer> DijkstraWithPath(GraphNode start) {}
+    public static Set<DijGraphNode> DijkstraWithPath(DijGraphNode start) {
+        Set<DijGraphNode> expanded = new HashSet<>();
+        // corner cases
+        if (start == null) {
+            return expanded;
+        }
+        PriorityQueue<DijGraphNode> minHeap = new PriorityQueue<>(new Comparator<DijGraphNode>() {
+            @Override
+            public int compare(DijGraphNode o1, DijGraphNode o2) {
+                if (o1.distance.equals(o2.distance)) {
+                    return 0;
+                }
+                return o1.distance < o2.distance ? -1 : 1;
+            }
+        });
+        start.distance = 0;
+        minHeap.offer(start);
+        while (!minHeap.isEmpty()) {
+            DijGraphNode cur = minHeap.poll();
+            expanded.add(cur);
+            for (DijGraphNode nei : cur.neighbors.keySet()) {
+                // case 1: nei has been expanded, do nothing;
+                // case 2: nei hasn't been expanded or generated, it's distance = cur.distance + cur.neighbors.get(nei), enqueue it (generate);
+                // case 3: nei has been generated and its distance <= cur.distance + cur.neighbors.get(nei), do nothing;
+                // case 4: nei has been generated and its distance > cur.distance + cur.neighbors.get(nei), replace its distance (re-generate);
+                Integer neiDis = cur.distance + cur.neighbors.get(nei);
+                if (!expanded.contains(nei) && (nei.distance == null || nei.distance > neiDis)) {
+                    nei.distance = neiDis;
+                    nei.prev = cur;
+                    minHeap.offer(nei); // not necessary when nei.distance != null, not harmful although.
+                }
+            }
+        }
+        return expanded;
+    }
 }

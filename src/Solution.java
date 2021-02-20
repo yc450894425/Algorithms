@@ -1,14 +1,32 @@
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 // quickSelect
 public class Solution {
 
     public static void main(String[] args) {
-        printArray(Class6HeapAndGraphSearchAlgorithmsI.kSmallestSolution2(new int[]{8, 2, 6, 3, 5, 7, 12, 52}, 5));
-
+        DijGraphNode n1 = new DijGraphNode(1);
+        DijGraphNode n2 = new DijGraphNode(2);
+        DijGraphNode n3 = new DijGraphNode(3);
+        DijGraphNode n4 = new DijGraphNode(4);
+        DijGraphNode n5 = new DijGraphNode(5);
+        DijGraphNode n6 = new DijGraphNode(6);
+        n1.neighbors.put(n2, 3);
+        n1.neighbors.put(n5, 1);
+        n2.neighbors.put(n1, 3);
+        n2.neighbors.put(n5, 4);
+        n3.neighbors.put(n2, 1);
+        n3.neighbors.put(n4, 1);
+        n4.neighbors.put(n3, 1);
+        n4.neighbors.put(n5, 10);
+        n4.neighbors.put(n6, 2);
+        n5.neighbors.put(n1, 1);
+        n5.neighbors.put(n2, 4);
+        n5.neighbors.put(n4, 10);
+        n6.neighbors.put(n4, 2);
+        Set<DijGraphNode> set = Class6HeapAndGraphSearchAlgorithmsI.DijkstraWithoutPathSolution2(n4);
+        for (DijGraphNode node : set) {
+            printDijGraphNode(node);
+        }
     }
 
     private static void printArray(int[] array) {
@@ -43,5 +61,14 @@ public class Solution {
             System.out.print(linkedList.get(i) + " => ");
         }
         System.out.println(linkedList.get(size));
+    }
+
+    private static void printDijGraphNode(DijGraphNode node) {
+        System.out.print("Node " + node.key + ": shortest distance is " + node.distance + ", Path: ");
+        while (node != null) {
+            System.out.print(node.key + " <= ");
+            node = node.prev;
+        }
+        System.out.println("null");
     }
 }
