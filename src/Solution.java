@@ -7,7 +7,7 @@ import java.util.Map;
 public class Solution {
 
     public static void main(String[] args) {
-        printArray(Class6HeapAndGraphSearchAlgorithmsI.kSmallestSolution3(new int[]{8, 2, 6, 3, 5, 7, 12, 52}, 5));
+        printArray(Class6HeapAndGraphSearchAlgorithmsI.kSmallestSolution2(new int[]{8, 2, 6, 3, 5, 7, 12, 52}, 5));
 
     }
 
