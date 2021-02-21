@@ -39,7 +39,7 @@ public class Class6HeapAndGraphSearchAlgorithmsI {
                 return o1 > o2 ? -1 : 1;
             }
         });
-        // Traverse all elements in array, O(nlogk)
+        // Traverse all elements of array, O(nlogk)
         for (int i = 0; i < array.length; i++) {
             if (i < k) {
                 maxHeap.offer(array[i]);
@@ -126,6 +126,122 @@ public class Class6HeapAndGraphSearchAlgorithmsI {
         array[j] = tmp;
     }
 
+//    Data Structure: FIFO queue
+//    Algorithm: Breadth First Search
+//    Initialize: queue = {root}
+//    For each step:
+//    record the current size (k) of the queue.
+//    Expand and generate k times.
+//            Terminate: queue is empty.
+//            Dedup: do not need deduplication.
+    public static List<List<Integer>> layerByLayer(TreeNode root) {
+        List<List<Integer>> result = new ArrayList<>();
+        if (root == null) {
+            return result;
+        }
+        Queue<TreeNode> queue = new ArrayDeque<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            List<Integer> level = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                TreeNode cur = queue.poll();
+                level.add(cur.key);
+                if (cur.left != null) {
+                    queue.offer(cur.left);
+                }
+                if (cur.right != null) {
+                    queue.offer(cur.right);
+                }
+            }
+            result.add(level);
+        }
+        return result;
+    }
+
+//    Data Structure: FIFO queue
+//    Algorithm: Breadth First Search
+//    Initialize: enqueue one node, color this node with 0.
+//    For each step:
+//    Expand: dequeue the first element (x) of the queue. (拿出)
+//    Generate: enqueue all neighbors of x into the queue, and color them with another color. (放入)
+//            case 1: 	the neighbor is not visited.
+//                color it with another color and enqueue.
+//		    case 2.1:	neighbor is visited, same color with x.
+//                return false;
+//            case 2.2: neighbor visited, different color with x.
+//                do nothing;
+//    At last, return true;
+//    Terminate: queue is empty.
+//    Dedup: We use a HashMap to deduplicate. The key of HashMap is node, the value is its color.
+    public static boolean isBipartite(List<GraphNode> graph) {
+        HashMap<GraphNode, Integer> visited = new HashMap<>();
+        for (GraphNode node : graph) {
+            if (!isBipartite(node, visited)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    private static boolean isBipartite(GraphNode node, HashMap<GraphNode, Integer> visited) {
+        // base cases
+        if (visited.containsKey(node)) {
+            return true;
+        }
+        Queue<GraphNode> queue = new ArrayDeque<>();
+        visited.put(node, 0);
+        queue.offer(node);
+
+        while (!queue.isEmpty()) {
+            GraphNode cur = queue.poll();
+            int color = visited.get(cur);
+            int neiColor = color == 0 ? 1 : 0;
+            for (GraphNode neigh : cur.neighbors) {
+                if (!visited.containsKey(neigh)) {
+                    visited.put(neigh, neiColor);
+                    queue.offer(neigh);
+                } else if (visited.get(neigh) != neiColor) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+//    Data Structure: FIFO queue
+//    Algorithm: Breadth First Search
+//    Initialize: queue = {root}
+//    For each step:
+//    Maintaining a boolean “flag” represents whether we met a “bubble” before.
+//            Expand: dequeue the first element (x) from queue.
+//            Generate: enqueue its children into queue if necessary.
+//	            case 1.1: 	flag true, x is not null;
+//			                return false;
+//	            case 1.2:   flag true, x is null;
+//			                do nothing;
+//	            case 2.1:   flag false, x is not null;
+//                            enqueue x’s children;
+//	            case 2.2:   flag false, x is null;
+//                            flag = true;
+//    Terminate: queue is empty
+    public static boolean isCompleted(TreeNode root) {
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        boolean flag = false;
+        while (!queue.isEmpty()) {
+            TreeNode cur = queue.poll();
+            if (flag && cur != null) {
+                return false;
+            } else if (cur == null) {
+                flag = true;
+            } else {
+                queue.offer(cur.left);
+                queue.offer(cur.right);
+            }
+        }
+        return true;
+    }
+
     public static Set<DijGraphNode> DijkstraWithoutPathSolution1(DijGraphNode start) {
         Set<DijGraphNode> expanded = new HashSet<>();
         Set<DijGraphNode> generated = new HashSet<>();
@@ -193,7 +309,7 @@ public class Class6HeapAndGraphSearchAlgorithmsI {
                 Integer neiDis = cur.distance + cur.neighbors.get(nei);
                 if (!expanded.contains(nei) && (nei.distance == null || nei.distance > neiDis)) {
                     nei.distance = neiDis;
-                    minHeap.offer(nei); // not necessary when nei.distance != null, not harmful although.
+                    minHeap.offer(nei); // not necessary when nei.distance != null, not wrong although.
                 }
             }
         }
@@ -229,10 +345,61 @@ public class Class6HeapAndGraphSearchAlgorithmsI {
                 if (!expanded.contains(nei) && (nei.distance == null || nei.distance > neiDis)) {
                     nei.distance = neiDis;
                     nei.prev = cur;
-                    minHeap.offer(nei); // not necessary when nei.distance != null, not harmful although.
+                    minHeap.offer(nei); // not necessary when nei.distance != null, not wrong although.
                 }
             }
         }
         return expanded;
     }
+//    Data Structure:
+//        PriorityQueue(heap)
+//        boolean[][] visited, for deduplication.
+//    Algorithm: Best First Search
+//    Initialize: enqueue matrix[0][0].
+//    For each step:
+//        Expand: dequeue the top element (x) from heap
+//        Generate: enqueue x’s right and bottom adjacent elements into heap if they are not visited.
+//    Terminate: For loop (k-1) times, then the top element is the k-th smallest.
+//    Deduplicate: Everytime we enqueue an element(matrix[i][j]), set visited[i][j] = true;
+    public static int kthSmallest(int[][] matrix, int k) {
+        int rows = matrix.length;
+        int cols = matrix[0].length;
+        PriorityQueue<Cell> minHeap = new PriorityQueue<>(k, new Comparator<Cell>() {
+            @Override
+            public int compare(Cell o1, Cell o2) {
+                if (o1.value == o2.value) {
+                    return 0;
+                }
+                return o1.value < o2.value ? -1 : 1;
+            }
+        });
+        boolean[][] visited = new boolean[rows][cols];
+        // Initialize
+        minHeap.offer(new Cell(0, 0, matrix[0][0]));
+        visited[0][0] = true;
+        for (int i = 0; i < k - 1; i++) {
+            Cell cur = minHeap.poll();
+            if (cur.row < rows - 1 && !visited[cur.row + 1][cur.col]) {
+                minHeap.offer(new Cell(cur.row + 1, cur.col, matrix[cur.row + 1][cur.col]));
+                visited[cur.row + 1][cur.col] = true;
+            }
+            if (cur.col < cols - 1 && !visited[cur.row][cur.col + 1]) {
+                minHeap.offer(new Cell(cur.row, cur.col + 1, matrix[cur.row][cur.col + 1]));
+                visited[cur.row][cur.col + 1] = true;
+            }
+        }
+        return minHeap.poll().value;
+    }
+
+    private static class Cell {
+        int row;
+        int col;
+        int value;
+        public Cell(int i, int j, int value) {
+            row = i;
+            col = j;
+            this.value = value;
+        }
+    }
+
 }
