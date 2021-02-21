@@ -23,7 +23,7 @@ public class Solution {
         n5.neighbors.put(n2, 4);
         n5.neighbors.put(n4, 10);
         n6.neighbors.put(n4, 2);
-        Set<DijGraphNode> set = Class6HeapAndGraphSearchAlgorithmsI.DijkstraWithPath(n3);
+        Set<DijGraphNode> set = Class6HeapAndGraphSearchAlgorithmsI.DijkstraWithoutPathSolution2(n4);
         for (DijGraphNode node : set) {
             printDijGraphNode(node);
         }

@@ -143,10 +143,10 @@ public class Class6HeapAndGraphSearchAlgorithmsI {
         queue.offer(root);
         while (!queue.isEmpty()) {
             int size = queue.size();
-            List<Integer> level = new ArrayList<>();
+            List<Integer> curLevel = new ArrayList<>();
             for (int i = 0; i < size; i++) {
                 TreeNode cur = queue.poll();
-                level.add(cur.key);
+                curLevel.add(cur.key);
                 if (cur.left != null) {
                     queue.offer(cur.left);
                 }
@@ -154,7 +154,7 @@ public class Class6HeapAndGraphSearchAlgorithmsI {
                     queue.offer(cur.right);
                 }
             }
-            result.add(level);
+            result.add(curLevel);
         }
         return result;
     }
@@ -224,7 +224,7 @@ public class Class6HeapAndGraphSearchAlgorithmsI {
 //	            case 2.2:   flag false, x is null;
 //                            flag = true;
 //    Terminate: queue is empty
-    public static boolean isCompleted(TreeNode root) {
+    public static boolean isCompletedSolution1(TreeNode root) {
         Queue<TreeNode> queue = new LinkedList<>();
         queue.offer(root);
         boolean flag = false;
@@ -236,6 +236,35 @@ public class Class6HeapAndGraphSearchAlgorithmsI {
                 flag = true;
             } else {
                 queue.offer(cur.left);
+                queue.offer(cur.right);
+            }
+        }
+        return true;
+    }
+    // This solution doesn't push "null" into queue.
+    public static boolean isCompletedSolution2(TreeNode root) {
+        // corner cases
+        if (root == null) {
+            return true;
+        }
+        Queue<TreeNode> queue = new ArrayDeque<>();
+        queue.offer(root);
+        boolean flag = false;
+        while (!queue.isEmpty()) {
+            TreeNode cur = queue.poll();
+            if (cur.left == null) {
+                flag = true;
+            } else if (flag) {
+                return false;
+            } else {
+                queue.offer(cur.left);
+            }
+
+            if (cur.right == null) {
+                flag = true;
+            } else if (flag) {
+                return false;
+            } else {
                 queue.offer(cur.right);
             }
         }
@@ -269,8 +298,9 @@ public class Class6HeapAndGraphSearchAlgorithmsI {
                 // case 2: nei hasn't been expanded or generated, it's distance = cur.distance + cur.neighbors.get(nei), enqueue it (generate);
                 // case 3: nei has been generated and its distance <= cur.distance + cur.neighbors.get(nei), do nothing;
                 // case 4: nei has been generated and its distance > cur.distance + cur.neighbors.get(nei), replace its distance (re-generate);
-                 if (!expanded.contains(nei) && (!generated.contains(nei) || cur.distance + cur.neighbors.get(nei) < nei.distance)) {
-                     nei.distance = cur.distance + cur.neighbors.get(nei);
+                Integer neiDis = cur.distance + cur.neighbors.get(nei);
+                 if (!expanded.contains(nei) && (!generated.contains(nei) || nei.distance > neiDis)) {
+                     nei.distance = neiDis;
                      if (!generated.contains(nei)) {
                          generated.add(nei);
                          minHeap.offer(nei);
@@ -379,25 +409,24 @@ public class Class6HeapAndGraphSearchAlgorithmsI {
         visited[0][0] = true;
         for (int i = 0; i < k - 1; i++) {
             Cell cur = minHeap.poll();
-            if (cur.row < rows - 1 && !visited[cur.row + 1][cur.col]) {
+            if (cur.row + 1 < rows && !visited[cur.row + 1][cur.col]) {
                 minHeap.offer(new Cell(cur.row + 1, cur.col, matrix[cur.row + 1][cur.col]));
                 visited[cur.row + 1][cur.col] = true;
             }
-            if (cur.col < cols - 1 && !visited[cur.row][cur.col + 1]) {
+            if (cur.col + 1 < cols && !visited[cur.row][cur.col + 1]) {
                 minHeap.offer(new Cell(cur.row, cur.col + 1, matrix[cur.row][cur.col + 1]));
                 visited[cur.row][cur.col + 1] = true;
             }
         }
         return minHeap.poll().value;
     }
-
     private static class Cell {
         int row;
         int col;
         int value;
-        public Cell(int i, int j, int value) {
-            row = i;
-            col = j;
+        public Cell(int row, int col, int value) {
+            this.row = row;
+            this.col = col;
             this.value = value;
         }
     }
