@@ -4,29 +4,22 @@ import java.util.*;
 public class Solution {
 
     public static void main(String[] args) {
-        DijGraphNode n1 = new DijGraphNode(1);
-        DijGraphNode n2 = new DijGraphNode(2);
-        DijGraphNode n3 = new DijGraphNode(3);
-        DijGraphNode n4 = new DijGraphNode(4);
-        DijGraphNode n5 = new DijGraphNode(5);
-        DijGraphNode n6 = new DijGraphNode(6);
-        n1.neighbors.put(n2, 3);
-        n1.neighbors.put(n5, 1);
-        n2.neighbors.put(n1, 3);
-        n2.neighbors.put(n5, 4);
-        n3.neighbors.put(n2, 1);
-        n3.neighbors.put(n4, 1);
-        n4.neighbors.put(n3, 1);
-        n4.neighbors.put(n5, 10);
-        n4.neighbors.put(n6, 2);
-        n5.neighbors.put(n1, 1);
-        n5.neighbors.put(n2, 4);
-        n5.neighbors.put(n4, 10);
-        n6.neighbors.put(n4, 2);
-        Set<DijGraphNode> set = Class6HeapAndGraphSearchAlgorithmsI.DijkstraWithoutPathSolution2(n4);
-        for (DijGraphNode node : set) {
-            printDijGraphNode(node);
-        }
+        Practice10ImplementingHeaps.MyHeap<Integer> minHeap = new Practice10ImplementingHeaps.MyHeap<>(new Integer[]{9, 6, 0, 5, 54, 25, 132}, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                if (o1.equals(o2)) {
+                    return 0;
+                }
+                return o1 > o2 ? -1 : 1;
+            }
+        });
+        System.out.println(minHeap.poll());
+        System.out.println(minHeap.poll());
+        System.out.println(minHeap.poll());
+        System.out.println(minHeap.poll());
+        System.out.println(minHeap.poll());
+        System.out.println(minHeap.poll());
+        System.out.println(minHeap.poll());
     }
 
     private static void printArray(int[] array) {
