@@ -13,6 +13,9 @@ public class Practice10ImplementingHeaps {
         private Comparator<E> comparator;
 
         public MyHeap(int capacity, Comparator<E> comparator) {
+            if (capacity <= 0) {
+                throw new IllegalArgumentException("Input capacity cannot be 0.");
+            }
             array = (E[]) new Comparable[capacity];
             size = 0;
             expandCoefficient = DEFAULT_EXPAND_COEFFICIENT;
