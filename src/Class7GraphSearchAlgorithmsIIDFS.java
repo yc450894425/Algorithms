@@ -44,15 +44,15 @@ public class Class7GraphSearchAlgorithmsIIDFS {
 //            O(n) for StringBuilder
 //    Total Space: O(n)
     public static List<String> subSets(String set) {
+        List<String> result = new ArrayList<>();
         if (set == null) {
-            return null;
+            return result;
         }
         char[] array = set.toCharArray();
-        List<String> result = new ArrayList<>();
-        subSetsDFS(array, 0, new StringBuilder(), result);
+        subSetsDFS(array, new StringBuilder(), 0, result);
         return result;
     }
-    private static void subSetsDFS(char[] array, int index, StringBuilder sb, List<String> result) {
+    private static void subSetsDFS(char[] array, StringBuilder sb, int index, List<String> result) {
         // base cases
         if (index == array.length) {
             result.add(sb.toString());
@@ -60,14 +60,11 @@ public class Class7GraphSearchAlgorithmsIIDFS {
         }
         // recursive rules
         // not select current letter
-        subSetsDFS(array, index + 1, sb, result);
+        subSetsDFS(array, sb, index + 1, result);
         // select current letter
-        sb.append(array[index]);
-        subSetsDFS(array, index + 1, sb, result);
+        subSetsDFS(array, sb.append(array[index]), index + 1, result);
         sb.deleteCharAt(sb.length() - 1);
     }
-
-
 
 //    Algorithm: Depth First Search
 //
@@ -84,32 +81,28 @@ public class Class7GraphSearchAlgorithmsIIDFS {
 //    Space: O(2n) => O(n)
     public static List<String> validParentheses(int n) {
         List<String> result = new ArrayList<>();
-        if (n <= 0) {
-            return result;
-        }
-        DFSHelper(n, n, new StringBuilder(), result);
+        char[] cur = new char[2 * n];
+        DFSHelper(cur, n, n, 0, result);
         return result;
     }
     // left represents the number of remaining left parenthesis to be added.
     // right represents the number of remaining right parenthesis to be added.
-    private static void DFSHelper(int left, int right, StringBuilder sb, List<String> result) {
+    private static void DFSHelper(char[] cur, int left, int right, int index, List<String> result) {
         // base cases
         if (left == 0 && right == 0) {
-            result.add(sb.toString());
+            result.add(new String(cur));
             return;
         }
         // recursive rules
         // if left > 0, add a '('
         if (left > 0) {
-            sb.append('(');
-            DFSHelper(left - 1, right, sb, result);
-            sb.deleteCharAt(sb.length() - 1);
+            cur[index] = '(';
+            DFSHelper(cur, left - 1, right, index + 1, result);
         }
         // if right > 0 && right > left, add a ')’
         if (right > left) {
-            sb.append(')');
-            DFSHelper(left, right - 1, sb, result);
-            sb.deleteCharAt(sb.length() - 1);
+            cur[index] = ')';
+            DFSHelper(cur, left, right - 1, index + 1, result);
         }
     }
 
@@ -139,14 +132,16 @@ public class Class7GraphSearchAlgorithmsIIDFS {
 //    Space: O(n)
     public static List<List<Integer>> combinations(int target, int[] coins) {
         List<List<Integer>> result = new ArrayList<>();
-        DFSHelper(coins, target, 0, new ArrayList<>(), result);
+        DFSHelper(target, coins, 0, new ArrayList<>(), result);
         return result;
     }
-    private static void DFSHelper(int[] coins, int remain, int index, List<Integer> cur, List<List<Integer>> result) {
+    private static void DFSHelper(int remain, int[] coins, int index, List<Integer> cur, List<List<Integer>> result) {
         // base cases
-        if (index == coins.length) {
-            if (remain == 0) {
+        if (index == coins.length - 1) {
+            if (remain % coins[coins.length - 1] == 0) {
+                cur.add(remain / coins[coins.length - 1]);
                 result.add(new ArrayList<>(cur));
+                cur.remove(cur.size() - 1);
             }
             return;
         }
@@ -154,7 +149,7 @@ public class Class7GraphSearchAlgorithmsIIDFS {
         int max = remain / coins[index];
         for (int i = 0; i <= max; i++) {
             cur.add(i);
-            DFSHelper(coins, remain - i * coins[index], index + 1, cur, result);
+            DFSHelper(remain - i * coins[index], coins, index + 1, cur, result);
             cur.remove(cur.size() - 1);
         }
     }
@@ -191,8 +186,11 @@ public class Class7GraphSearchAlgorithmsIIDFS {
 //    Time: O(n!*n)
 //    Space: O(n)
     public static List<String> permutations(String input) {
-        char[] array = input.toCharArray();
         List<String> result = new ArrayList<>();
+        if (input == null) {
+            return result;
+        }
+        char[] array = input.toCharArray();
         DFSHelper(array, 0, result);
         return result;
     }
@@ -214,6 +212,4 @@ public class Class7GraphSearchAlgorithmsIIDFS {
         array[i] = array[j];
         array[j] = tmp;
     }
-
-
 }
