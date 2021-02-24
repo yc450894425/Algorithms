@@ -4,22 +4,7 @@ import java.util.*;
 public class Solution {
 
     public static void main(String[] args) {
-        Practice10ImplementingHeaps.MyHeap<Integer> minHeap = new Practice10ImplementingHeaps.MyHeap<>(new Integer[]{9, 6, 0, 5, 54, 25, 132}, new Comparator<Integer>() {
-            @Override
-            public int compare(Integer o1, Integer o2) {
-                if (o1.equals(o2)) {
-                    return 0;
-                }
-                return o1 > o2 ? -1 : 1;
-            }
-        });
-        System.out.println(minHeap.poll());
-        System.out.println(minHeap.poll());
-        System.out.println(minHeap.poll());
-        System.out.println(minHeap.poll());
-        System.out.println(minHeap.poll());
-        System.out.println(minHeap.poll());
-        System.out.println(minHeap.poll());
+        System.out.println(Class7GraphSearchAlgorithmsIIDFS.validParentheses(3));
     }
 
     private static void printArray(int[] array) {
