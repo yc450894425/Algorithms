@@ -49,4 +49,45 @@ public class Solution {
         }
         System.out.println("null");
     }
+
+//    transfer input string to char array, and string t to a set.
+//    two pointers:
+//        slow: left (excluding itself) are processed letters that should be kept in result string;
+//        fast: left (excluding itself) are processed;
+//    Initialize:
+//        slow = 0;
+//        fast = 0;
+//    For each step:
+//        array[fast] is in set, fast++;
+//        array[fast] is not in set, array[slow++] = array[fast++];
+//    terminate: fast == input’s length
+//    post-processing: convert char array[0, slow - 1] into string.
+//    time:
+//        O(n) in a, where n is input length;
+//        O(n*m) in w, m is length of t;
+//    space:
+//        O(m), m is length of t;
+    public static String remove(String input, String t) {
+        // corner cases
+        if (input.length() == 0 || t.length() == 0) {
+            return input;
+        }
+        Set<Character> set = toSet(t);
+        char[] array = input.toCharArray();
+        int slow = 0;
+        for (int fast = 0; fast < array.length; fast++) {
+            if (!set.contains(array[fast])) {
+                array[slow++] = array[fast];
+            }
+        }
+        return new String(array, 0, slow);
+    }
+    private static Set<Character> toSet(String input) {
+        Set<Character> set = new HashSet<>();
+        for (int i = 0; i < input.length(); i++) {
+            set.add(input.charAt(i));
+        }
+        return set;
+    }
+
 }
