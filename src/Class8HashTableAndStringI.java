@@ -113,7 +113,6 @@ public static List<Integer> commonSolution1(int[] a, int[] b) {
         return common;
     }
 
-
 //    transfer input string to char array, and string t to a set.
 //    two pointers:
 //        slow: left (excluding itself) are processed letters that should be kept in result string;
@@ -153,6 +152,60 @@ public static List<Integer> commonSolution1(int[] a, int[] b) {
         }
         return set;
     }
+
+    public static String removeSpaces(String input) {
+        char[] array = input.toCharArray();
+        int slow = 0;
+        int fast = 0;
+        while (fast < array.length) {
+//            case 1. slow == 0 && array[fast] is space:
+//                fast++;
+//            case 2. array[fast] not space:
+//                copy it to array[slow], slow++, fast++;
+//            case 3. slow != 0 && array[fast] is space:
+//                move fast forward until it reaches a non-space letter or out of bound.
+//                    array[slow++] = space
+            if (slow == 0 && array[fast] == ' ') {
+                fast++;
+            } else if (array[fast] != ' ') {
+                array[slow++] = array[fast++];
+            } else {
+                while (fast < array.length && array[fast] == ' ') {
+                    fast++;
+                }
+                array[slow++] = ' ';
+            }
+        }
+        // post-processing
+        if (array[slow - 1] == ' ') {
+            slow--;
+        }
+        return new String(array, 0, slow);
+    }
+
+//    [0, s) are letters that should be kept in result;
+//    [s, f) are letters we don't care;
+//    [f, input's length) are unprocessed letters;
+//    for each step:
+//        case 1. s == 0:
+//            array[s++] = array[f++];
+//	    case 2. s != 0 && array[f] == array[s - 1]
+//            f++;
+//	    case 3. s != 0 && array[f] != array[s - 1]
+//            copy array[f++] to array[s++];
+//    terminate: f == input's length
+    public static String deDup(String input) {
+        char[] array = input.toCharArray();
+        int slow = 0;
+        for (int fast = 0; fast < array.length; fast++) {
+            if (slow == 0 || array[fast] != array[slow - 1]) {
+                array[slow++] = array[fast];
+            }
+        }
+        return new String(array, 0, slow);
+    }
+
+
 
 
 

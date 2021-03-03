@@ -4,7 +4,7 @@ import java.util.*;
 public class Solution {
 
     public static void main(String[] args) {
-        System.out.println(Class8HashTableAndStringI.commonSolution3(new int[]{1, 6, 7, 9, 13}, new int[]{1,2,3,4,5,6,8,10,11,12,13,14,15}));
+        System.out.println(Class8HashTableAndStringI.deDup(""));
     }
 
     private static void printArray(int[] array) {
