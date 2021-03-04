@@ -131,10 +131,6 @@ public static List<Integer> commonSolution1(int[] a, int[] b) {
 //    space:
 //        O(m), m is length of t;
     public static String remove(String input, String t) {
-        // corner cases
-        if (input.length() == 0 || t.length() == 0) {
-            return input;
-        }
         Set<Character> set = toSet(t);
         char[] array = input.toCharArray();
         int slow = 0;
@@ -156,28 +152,16 @@ public static List<Integer> commonSolution1(int[] a, int[] b) {
     public static String removeSpaces(String input) {
         char[] array = input.toCharArray();
         int slow = 0;
-        int fast = 0;
-        while (fast < array.length) {
-//            case 1. slow == 0 && array[fast] is space:
-//                fast++;
-//            case 2. array[fast] not space:
-//                copy it to array[slow], slow++, fast++;
-//            case 3. slow != 0 && array[fast] is space:
-//                move fast forward until it reaches a non-space letter or out of bound.
-//                    array[slow++] = space
-            if (slow == 0 && array[fast] == ' ') {
-                fast++;
-            } else if (array[fast] != ' ') {
-                array[slow++] = array[fast++];
-            } else {
-                while (fast < array.length && array[fast] == ' ') {
-                    fast++;
-                }
-                array[slow++] = ' ';
+        for (int fast = 0; fast < array.length; fast++) {
+//            1. we ignore all spaces followed by another space.
+//            2. we ignore all leading spaces.
+            if (array[fast] == ' ' && (fast == 0 || array[fast - 1] == ' ')) {
+                continue;
             }
+            array[slow++] = array[fast];
         }
         // post-processing
-        if (array[slow - 1] == ' ') {
+        if (slow > 0 && array[slow - 1] == ' ') {
             slow--;
         }
         return new String(array, 0, slow);
