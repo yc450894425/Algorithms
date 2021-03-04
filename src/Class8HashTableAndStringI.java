@@ -273,5 +273,52 @@ public class Class8HashTableAndStringI {
         return true;
     }
 
+    public static int strstrRabinKarpBetterImplementation(String large, String small) {
+        // corner cases
+        int m = large.length();
+        int n = small.length();
+        if (m < n) {
+            return -1;
+        }
+        if (n == 0) {
+            return 0;
+        }
+        int largePrime = 101;
+        int prime = 31;
+
+        int seed = 1;
+        int targetHash = small.charAt(0) % largePrime;
+        for (int i = 1; i < n; i++) {
+            seed = hashModule(seed, 0, prime, largePrime);
+            targetHash = hashModule(targetHash, small.charAt(i), prime, largePrime);
+        }
+
+        int hash = 0;
+        for (int i = 0; i < n; i++) {
+            hash = hashModule(hash, large.charAt(i), prime, largePrime);
+        }
+        if (targetHash == hash && isIdentical(large, 0, small)) {
+            return 0;
+        }
+
+        for (int i = 1; i <= m - n; i++) {
+            hash = negativeModify(hash - seed * large.charAt(i - 1) % largePrime, largePrime);
+            hash = hashModule(hash, large.charAt(i + n - 1), prime, largePrime);
+
+            if (targetHash == hash && isIdentical(large, i, small)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+    private static int hashModule(int hash, int addition, int prime, int largePrime) {
+        return (hash * prime % largePrime + addition) % largePrime;
+    }
+    private static int negativeModify(int hash, int largePrime) {
+        if (hash < 0) {
+            hash += largePrime;
+        }
+        return hash;
+    }
 
 }
