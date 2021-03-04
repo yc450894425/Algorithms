@@ -45,14 +45,14 @@ public class Class8HashTableAndStringI {
         return xor;
     }
 
-//    Assumption: a and b are ascending sorted; duplicates; fits in memory.
+    //    Assumption: a and b are ascending sorted; duplicates; fits in memory.
 //            Time: O(m+n) where m is the length of a and n is length of b.
 //    Space: O(1).
-public static List<Integer> commonSolution1(int[] a, int[] b) {
-    List<Integer> common = new ArrayList<>();
-    int i = 0;
-    int j = 0;
-    while (i < a.length && j < b.length) {
+    public static List<Integer> commonSolution1(int[] a, int[] b) {
+        List<Integer> common = new ArrayList<>();
+        int i = 0;
+        int j = 0;
+        while (i < a.length && j < b.length) {
 //        case 1. a[i] == b[j]: add a[i] into list, i++, j++;
 //        case 2. a[i] < b[j]: i++;
 //        case 3. a[i] > b[j]: j++;
@@ -65,10 +65,11 @@ public static List<Integer> commonSolution1(int[] a, int[] b) {
                 i++;
                 j++;
             }
+        }
+        return common;
     }
-    return common;
-}
-//    Assumption: a and b are ascending sorted; duplicates; fits in memory.
+
+    //    Assumption: a and b are ascending sorted; duplicates; fits in memory.
 //    m is a’s length, n is b’s length;
 //    Time:
 //            for a: O(m) in average, O(m^2) in worst case;
@@ -94,7 +95,8 @@ public static List<Integer> commonSolution1(int[] a, int[] b) {
         }
         return common;
     }
-//    Assumption: a and b are ascending sorted; NO duplicates; fits in memory.
+
+    //    Assumption: a and b are ascending sorted; NO duplicates; fits in memory.
 //            Time: O(mlogn) where m is the length of the shorter array between a and b, n is the length of the longer one.
 //    Space: O(1)
     public static List<Integer> commonSolution3(int[] a, int[] b) {
@@ -113,7 +115,7 @@ public static List<Integer> commonSolution1(int[] a, int[] b) {
         return common;
     }
 
-//    transfer input string to char array, and string t to a set.
+    //    transfer input string to char array, and string t to a set.
 //    two pointers:
 //        slow: left (excluding itself) are processed letters that should be kept in result string;
 //        fast: left (excluding itself) are processed;
@@ -167,7 +169,7 @@ public static List<Integer> commonSolution1(int[] a, int[] b) {
         return new String(array, 0, slow);
     }
 
-//    [0, s) are letters that should be kept in result;
+    //    [0, s) are letters that should be kept in result;
 //    [s, f) are letters we don't care;
 //    [f, input's length) are unprocessed letters;
 //    for each step:
@@ -189,8 +191,86 @@ public static List<Integer> commonSolution1(int[] a, int[] b) {
         return new String(array, 0, slow);
     }
 
+    //    convert input from String to char array
+//    fast = 0; left side (excluding itself) are processed letters;
+//    slow = 0; left side (excluding itself) are letters should kept in result;
+//    for each step:
+//        case1. slow == 0: copy f to s, s++, f++;
+//        case2. array[f] == array[s-1]:
+//            move f forward untill array[f] != array[s-1]
+//            s--;
+//        case3. array[f] != array[s-1]:
+//            copy f to s, s++, f++
+//    terminate: fast == length of input
+//    return new String(array, 0, slow);
+    public static String repeatedlyDeDup(String input) {
+        // corner cases
+        if (input == null || input.length() <= 1) {
+            return input;
+        }
+        char[] array = input.toCharArray();
+        int f = 0;
+        int s = 0;
+        while (f < array.length) {
+            if (s != 0 && array[f] == array[s - 1]) {
+                while (f < array.length && array[f] == array[s - 1]) {
+                    f++;
+                }
+                s--;
+            } else {
+                array[s++] = array[f++];
+            }
+        }
+        return new String(array, 0, s);
+    }
 
+    //    Rabin-Karp
+//    Range of the starting index: [0, large.length - small.length];
+//                    m              n
+//    We have (large.length - small.length + 1) sliding windows;
+//    if hash codes are equal, we must compare two strings for confirmation. O(n)
+//    time:
+//        hash small: O(n)
+//        sliding window:
+//            O(m) in average because every elements will be used once to calculate hash code;
+//            O(mn) in worst case because we must compare m times in worst case;
+//        total: O(m + n) in average, O(mn) in worst case
+    public static int strstr(String large, String small) {
+        int m = large.length();
+        int n = small.length();
+        // corner cases
+        if (n > m) {
+            return -1;
+        }
+        if (n == 0) {
+            return 0;
+        }
+        int smallCode = hashCode(small, 0, n - 1);
+        int largeCode = 0;
+        for (int i = 0; i <= m - n; i++) {
+            largeCode = i == 0 ? hashCode(large, 0, n - 1) : (largeCode - (large.charAt(i - 1) - 'a') * (int)Math.pow(26, n - 1)) * 26 + (large.charAt(i + n - 1) - 'a');
+            if (largeCode == smallCode && isIdentical(large, i, small)) {
+                return i;
+            }
+        }
+        return -1;
 
+    }
+    private static int hashCode(String input, int s, int e) {
+        int code = 0;
+        while (s <= e) {
+            code = code * 26 + (input.charAt(s++) - 'a');
+        }
+        return code;
+    }
+    private static boolean isIdentical(String large, int index, String small) {
+        for (int i = 0; i < small.length(); i++) {
+            if (small.charAt(i) != large.charAt(i + index)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
 
 }

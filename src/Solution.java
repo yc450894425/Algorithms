@@ -4,7 +4,7 @@ import java.util.*;
 public class Solution {
 
     public static void main(String[] args) {
-        System.out.println(Class8HashTableAndStringI.deDup(""));
+        System.out.println(Class8HashTableAndStringI.strstr("abcdefghijklmnopqrstuvwxyzzabcdefghijklmnopqrstu", "qrstuvwxyzzabcdefghijklmnopqrstu"));
     }
 
     private static void printArray(int[] array) {
