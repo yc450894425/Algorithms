@@ -249,6 +249,7 @@ public class Class8HashTableAndStringI {
         int largeCode = 0;
         for (int i = 0; i <= m - n; i++) {
             largeCode = i == 0 ? hashCode(large, 0, n - 1) : (largeCode - (large.charAt(i - 1) - 'a') * (int)Math.pow(26, n - 1)) * 26 + (large.charAt(i + n - 1) - 'a');
+
             if (largeCode == smallCode && isIdentical(large, i, small)) {
                 return i;
             }
