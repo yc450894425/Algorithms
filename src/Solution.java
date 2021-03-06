@@ -4,7 +4,7 @@ import java.util.*;
 public class Solution {
 
     public static void main(String[] args) {
-        System.out.println(Class9StringII.reverseWords("I love Google"));
+        System.out.println(Class9StringII.replace("nhdnhdnhdnhdnhd", "nhd", "gawyg"));
     }
 
     private static void printArray(int[] array) {
