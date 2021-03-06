@@ -4,7 +4,7 @@ import java.util.*;
 public class Solution {
 
     public static void main(String[] args) {
-        System.out.println(Class8HashTableAndStringI.strstrRabinKarpBetterImplementation("abcdefghijklmnopqrstuvwxyzzabcdefghijklmnopqrstu", "qrstuvwxyzzabcdefghijklmnopqrstu"));
+        System.out.println(Class9StringII.reverseWords("I love Google"));
     }
 
     private static void printArray(int[] array) {
