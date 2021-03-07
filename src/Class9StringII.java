@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Class9StringII {
 //    time O(n)
@@ -154,6 +156,137 @@ public class Class9StringII {
         }
         return true;
     }
+
+//    use a set to record used letters
+    public static List<String> permutations(String input) {
+        List<String> result = new ArrayList<>();
+        if (input == null || input.length() == 0) {
+            return result;
+        }
+        char[] array = input.toCharArray();
+        DFSHelper(array, 0, result);
+        return result;
+    }
+    private static void DFSHelper(char[] array, int index, List<String> result) {
+        // base cases
+        if (index == array.length) {
+            result.add(new String(array));
+            return;
+        }
+        // recursive rules
+        Set<Character> used = new HashSet<>();
+        for (int i = index; i < array.length; i++) {
+            if (used.contains(array[i])) {
+                continue;
+            }
+            swap(array, index, i);
+            DFSHelper(array, index + 1, result);
+            swap(array, index, i);
+        }
+    }
+    public static int[] reorder(int[] array) {
+        // corner cases
+        if (array == null || array.length <= 1) {
+            return array;
+        }
+        reorderHelper(array, 0, array.length - 1);
+        return array;
+    }
+    private static void reorderHelper(int[] array, int left, int right) {
+        // base cases
+        // if there are only 2 or less elements, we don't need do anything;
+        if (left >= right - 1) {
+            return;
+        }
+        // recursive rules
+        int size = right - left + 1;
+        int m = left + size / 2;
+        int lm = left + size / 4;
+        int rm = m + size / 4;
+        reverse(array, lm, m - 1);
+        reverse(array, m, rm - 1);
+        reverse(array, lm, rm - 1);
+        reorderHelper(array, left, left + 2 * (lm - left) - 1);
+        reorderHelper(array, left + 2 * (lm - left), right);
+    }
+    private static void reverse(int[] array, int i, int j) {
+        while (i < j) {
+            swap(array, i++, j--);
+        }
+    }
+    private static void swap(int[] array, int i, int j) {
+        int tmp = array[i];
+        array[i] = array[j];
+        array[j] = tmp;
+    }
+//    Two pointers: i, j
+//    1. deal with the letters whose adjacent occurrence >= 2
+//    2. deal with letters whose ao == 1
+    public static String compress(String input) {
+        // corner cases
+        if (input.length() == 0) {
+            return input;
+        }
+        char[] array = input.toCharArray();
+        // deal with the letters whose adjacent occurrence >= 2
+        int i = 0; // left of i (excluding i) are processed elements
+        int j = 0; // left of j (excluding j) are traversed elements
+        int newLength = 0; // record the needed length of the new array
+        while (j < array.length) {
+            int count = 0;
+            int start = j;
+            while (j < array.length && array[j] == array[start]) {
+                j++;
+                count++;
+            }
+            array[i++] = array[start];
+            if (count == 1) {
+                newLength += 2;
+            } else {
+                int digit = getDigit(count);
+                copyDigit(array, i, count, digit);
+                i += digit;
+                newLength += digit + 1;
+            }
+        }
+        char[] result = new char[newLength];
+        int fast = i - 1;
+        int slow = result.length - 1;
+        while (fast >= 0) {
+//            case1. array[fast] is a digit:
+//                copy digits from array to result until we met a letter;
+//            case2. array[fast] is a letter
+//                array[slow--] = '1';
+//                array[slow--] = array[fast--];
+            if (isDigit(array[fast])) {
+                while (fast >= 0 && isDigit(array[fast])) {
+                    result[slow--] = array[fast--];
+                }
+                result[slow--] = array[fast--];
+            } else {
+                result[slow--] = '1';
+                result[slow--] = array[fast--];
+            }
+        }
+        return new String(result);
+    }
+    private static int getDigit(int count) {
+        int digit = 0;
+        for (; count > 0; count /= 10) {
+            digit++;
+        }
+        return digit;
+    }
+    private static void copyDigit(char[] array, int start, int count, int digit) {
+        for (int i = digit - 1; i >= 0; i--) {
+            array[start + i] = (char)('0' + count % 10);
+            count /= 10;
+        }
+    }
+    private static boolean isDigit(char ele) {
+        return ele >= '0' && ele <= '9';
+    }
+
 
 
 }

@@ -4,7 +4,7 @@ import java.util.*;
 public class Solution {
 
     public static void main(String[] args) {
-        System.out.println(Class9StringII.replace("nhdnhdnhdnhdnhd", "nhd", "gawyg"));
+        printArray(Class9StringII.reorder(new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}));
     }
 
     private static void printArray(int[] array) {
