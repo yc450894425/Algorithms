@@ -281,6 +281,55 @@ public class Class9StringII {
         return len;
     }
 
+//    Two pointers: slow, fast
+//    1. deal with letters whose adjacent repeated occurrence <= 2. (shorter than or equal to origin input)
+//    2. deal with letters whose adjacent repeated occurrence > 2. (longer than origin input)
+    public static String decompress(String input) {
+        if (input == null || input.length() <= 1) {
+            return input;
+        }
+        char[] array = input.toCharArray();
+        // 1. deal with letters whose adjacent repeated occurrence <= 2. (shorter than or equal to origin input)
+        int slow = 0;
+        int extraLen = 0;
+        int fast = 0;
+        for (; fast < array.length; fast += 2) {
+            int count = array[fast + 1] - '0';
+            if (count <= 2) {
+                for (int i = 0; i < count; i++) {
+                    array[slow++] = array[fast];
+                }
+            } else {
+                array[slow++] = array[fast];
+                array[slow++] = array[fast + 1];
+                extraLen += array[fast + 1] - '0' - 2;
+            }
+        }
+
+        // 2. deal with letters whose adjacent repeated occurrence > 2.
+        char[] result = new char[slow + extraLen];
+        fast = slow - 1;
+        slow = result.length - 1;
+        while (fast >= 0) {
+//            case1. array[f] is a letter:
+//                copy it to result.
+//            case2. array[f] is a digit (e.g. n):
+//                f must >= 1
+//                copy n array[f - 1]s to result;
+            if (Character.isDigit(array[fast])) {
+                int count = array[fast] - '0';
+                for (int i = 0; i < count; i++) {
+                    result[slow--] = array[fast - 1];
+                }
+                fast -= 2;
+            } else {
+                result[slow--] = array[fast--];
+            }
+        }
+        return new String(result);
+    }
+
+
 
 
 }

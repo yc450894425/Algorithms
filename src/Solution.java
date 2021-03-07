@@ -4,7 +4,7 @@ import java.util.*;
 public class Solution {
 
     public static void main(String[] args) {
-        System.out.println(Class9StringII.compress("abbcccddddeeeeefghiiii"));
+        System.out.println(Class9StringII.decompress("a1c0b2c4"));
     }
 
     private static void printArray(int[] array) {
