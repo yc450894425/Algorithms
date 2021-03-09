@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Class9StringII {
 //    time O(n)
@@ -328,6 +325,145 @@ public class Class9StringII {
         }
         return new String(result);
     }
+
+//    sliding window
+//    slow: left border of sw.
+//    fast: right border of sw.
+//    hashset: <key: letter>, maintain all letters in the sliding window.
+//    globalMax: maintain the length of the longest subString
+//
+//    case 1: if input[f + 1] is not in the set
+//        f++, add it to set, update glbMax;
+//
+//    case 2: input[f + 1] in the set
+//        s++, remove input[s - 1] from set;
+//
+//    terminate: f == length - 1
+//
+//    time: O(n) in average, O(n^2) in worst case where n is length of input
+//    extra space: O(n) in worst case
+
+    public static int longest(String input) {
+        // corner cases
+        if (input.length() <= 1) {
+            return input.length();
+        }
+        int slow = 0;
+        int fast = -1;
+        int result = Integer.MIN_VALUE;
+        HashSet<Character> set = new HashSet<>();
+        while (fast < input.length() - 1) {
+            if (set.contains(input.charAt(fast + 1))) {
+                set.remove(input.charAt(slow++));
+            } else {
+                set.add(input.charAt(++fast));
+                result = Math.max(result, fast - slow + 1);
+            }
+        }
+        return result;
+    }
+
+//    sliding window
+//
+//    Data structure:
+//    s: the left border (including s), 0
+//    f: the right border (not including f), 0
+//    [s, f) is the window.
+//    hashmap: records the number of occurrences of each chars in [s, f] (only chars that are in sh).
+//    unMatch: the number of unmatching chars in [s, f]. unMatch == 0 means this is an anagram.
+//
+//    pre-processing:
+//        add all letters of sh into hashmap;
+//    For each step:
+//        add lo[f] into hashmap, update unMatch if necessary;
+//        f++;
+//	    if f > sh.length:
+//            s++;
+//            update unMatch if necessary;
+//	    else: do nothing;
+//	    if f >= sh.length && unMatch is 0, add s into result;
+//
+//    terminate: f == lo.length
+//
+//    time: O(m) + O(n) in average, O(m^2) + O(n*m) in worst case where m is sh.length, n is lo.length;
+//    auxiliary space: O(m)
+    public static List<Integer> allAnagrams(String sh, String lo) {
+        List<Integer> result = new ArrayList<>();
+        // corner cases
+        if (lo.isEmpty()) {
+            return result;
+        }
+        int slow = 0;
+        int fast = 0;
+        Map<Character, Integer> freq = toMap(sh);
+        int unMatch = freq.size();
+
+//        while (fast < lo.length()) {
+//            // update right border
+//            char tmp = lo.charAt(fast);
+//            Integer count = freq.get(tmp);
+//            if (count != null) {
+//                freq.put(tmp, count - 1);
+//                if (count == 1) {
+//                    unMatch--;
+//                }
+//            }
+//            fast++;
+//            // update left border
+//            if (fast > sh.length()) {
+//                tmp = lo.charAt(slow);
+//                count = freq.get(tmp);
+//                if (count != null) {
+//                    freq.put(tmp, count + 1);
+//                    if (count == 0) {
+//                        unMatch++;
+//                    }
+//                }
+//                slow++;
+//            }
+//            // check if is an anagram
+//            if (unMatch == 0) {
+//                result.add(slow);
+//            }
+//        }
+        // better implementation
+        for (; fast < lo.length(); fast++) {
+            // update right border
+            char tmp = lo.charAt(fast);
+            Integer count = freq.get(tmp);
+            if (count != null) {
+                freq.put(tmp, count - 1);
+                if (count == 1) {
+                    unMatch--;
+                }
+            }
+            // update left border
+            if (fast >= sh.length()) {
+                tmp = lo.charAt(slow);
+                count = freq.get(tmp);
+                if (count != null) {
+                    freq.put(tmp, count + 1);
+                    if (count == 0) {
+                        unMatch++;
+                    }
+                }
+                slow++;
+            }
+            // check if is an anagram
+            if (unMatch == 0) {
+                result.add(slow);
+            }
+        }
+        return result;
+    }
+    private static Map<Character, Integer> toMap(String input) {
+        Map<Character, Integer> map = new HashMap<>();
+        for (int i = 0; i < input.length(); i++) {
+            map.put(input.charAt(i), map.getOrDefault(input.charAt(i), 0) + 1);
+        }
+        return map;
+    }
+
 
 
 
