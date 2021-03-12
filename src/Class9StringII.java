@@ -330,10 +330,10 @@ public class Class9StringII {
 //    slow: left border of sw.
 //    fast: right border of sw.
 //    hashset: <key: letter>, maintain all letters in the sliding window.
-//    globalMax: maintain the length of the longest subString
+//    longest: maintain the length of the longest valid subString
 //
 //    case 1: if input[f + 1] is not in the set
-//        f++, add it to set, update glbMax;
+//        f++, add it to set, update longest;
 //
 //    case 2: input[f + 1] in the set
 //        s++, remove input[s - 1] from set;
@@ -350,17 +350,17 @@ public class Class9StringII {
         }
         int slow = 0;
         int fast = -1;
-        int result = Integer.MIN_VALUE;
+        int longest = 0;
         HashSet<Character> set = new HashSet<>();
         while (fast < input.length() - 1) {
             if (set.contains(input.charAt(fast + 1))) {
                 set.remove(input.charAt(slow++));
             } else {
                 set.add(input.charAt(++fast));
-                result = Math.max(result, fast - slow + 1);
+                longest = Math.max(longest, fast - slow + 1);
             }
         }
-        return result;
+        return longest;
     }
 
 //    sliding window
@@ -394,7 +394,6 @@ public class Class9StringII {
             return result;
         }
         int slow = 0;
-        int fast = 0;
         Map<Character, Integer> freq = toMap(sh);
         int unMatch = freq.size();
 
@@ -427,7 +426,7 @@ public class Class9StringII {
 //            }
 //        }
         // better implementation
-        for (; fast < lo.length(); fast++) {
+        for (int fast = 0; fast < lo.length(); fast++) {
             // update right border
             char tmp = lo.charAt(fast);
             Integer count = freq.get(tmp);
@@ -463,6 +462,49 @@ public class Class9StringII {
         }
         return map;
     }
+
+//    Data structure:
+//    s: left border
+//    f: right border
+//    numZeros: number of zeros in sliding window
+//    longest: the length of the longest valid sliding window
+//
+//    Initialize:
+//    s = 0;
+//    f = -1;
+//    numZeros = 0;
+//    longest = 0;
+//
+//    For each step:
+//            case 1: nums[f + 1] == 1, then f++, update longest;
+//	        case 2: nums[f + 1] == 0,
+//                case 2.1: numZeros == k, then s++, numZeros-- if nums[s - 1] == 0;
+//		        case 2.2: numZeros < k, then f++, numZeros++, update longest;
+//
+//    terminate: f == nums.length - 1;
+    public static int longestConsecutiveOnes(int[] nums, int k) {
+        // corner cases
+        if (nums == null || nums.length == 0) {
+            return 0;
+        }
+        int s = 0;
+        int f = -1;
+        int numZeros = 0;
+        int longest = 0;
+
+        while (f < nums.length - 1) {
+            if (nums[f + 1] == 1) {
+                longest = Math.max(longest, ++f - s + 1);
+            } else if (numZeros < k) {
+                numZeros++;
+                longest = Math.max(longest, ++f - s + 1);
+            } else if (nums[s++] == 0){
+                numZeros--;
+            }
+        }
+        return longest;
+    }
+
 
 
 

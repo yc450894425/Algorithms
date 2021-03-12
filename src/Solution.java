@@ -4,7 +4,7 @@ import java.util.*;
 public class Solution {
 
     public static void main(String[] args) {
-        System.out.println(Class9StringII.allAnagrams("aab", "ababacbbaac"));
+        System.out.println(Class9StringII.longestConsecutiveOnes(new int[]{0}, 0));
     }
 
     private static void printArray(int[] array) {
