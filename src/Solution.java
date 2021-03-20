@@ -4,7 +4,17 @@ import java.util.*;
 public class Solution {
 
     public static void main(String[] args) {
-        System.out.println(Class9StringII.longestConsecutiveOnes(new int[]{0}, 0));
+        Practice14HashMapImplementation.CustomHashMap<Character, Integer> map = new Practice14HashMapImplementation.CustomHashMap<>(3);
+        map.put('a', 1);
+        map.put('b', 2);
+        map.put('c', 3);
+        map.put('d', 4);
+        System.out.println(map.get('a'));
+        System.out.println(map.get('b'));
+        System.out.println(map.get('c'));
+        System.out.println(map.get('d'));
+        map.clear();
+        System.out.println(map.remove('a'));
     }
 
     private static void printArray(int[] array) {
