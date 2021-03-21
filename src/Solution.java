@@ -15,7 +15,6 @@ public class Solution {
         System.out.println(map.get('d'));
         map.clear();
         System.out.println(map.remove('a'));
-        System.out.println(-4 % 3);
     }
 
     private static void printArray(int[] array) {
