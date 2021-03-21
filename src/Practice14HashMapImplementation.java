@@ -31,10 +31,10 @@ public class Practice14HashMapImplementation {
         private static final float SCALE_FACTOR = 1.5f;
         private Entry<K, V>[] array;
         private int size;
-        private float loadFactor;
+        private float loadFactor; // used to help determine when to rehash
 
         public CustomHashMap(int capacity, float loadFactor) {
-            array = (Entry<K, V>[]) new Entry[capacity];
+            array = (Entry<K, V>[]) (new Entry[capacity]);
             size = 0;
             this.loadFactor = loadFactor;
         }
@@ -75,8 +75,7 @@ public class Practice14HashMapImplementation {
             while (node != null) {
                 if (keysEqual(node.getKey(), key)) {
                     // update
-                    V old = node.getValue();
-                    node.setValue(value);
+                    V old = node.setValue(value);
                     // return old value
                     return old;
                 }
@@ -102,14 +101,13 @@ public class Practice14HashMapImplementation {
             Entry<K, V> node = array[index];
             while (node != null) {
                 if (keysEqual(node.getKey(), key)) {
-                    V value = node.getValue();
                     if (prev == null) {
-                        array[index] = null;
+                        array[index] = node.next;
                     } else {
                         prev.next = node.next;
                     }
                     size--;
-                    return value;
+                    return node.getValue();
                 }
                 prev = node;
                 node = node.next;
@@ -131,8 +129,10 @@ public class Practice14HashMapImplementation {
         }
 
         public boolean containsValue(V value) {
-            for (int i = 0; i < array.length; i++) {
-                Entry<K, V> node = array[i];
+            if (isEmpty()) {
+                return false;
+            }
+            for (Entry<K, V> node : array) {
                 while (node != null) {
                     if (valuesEqual(node.getValue(), value)) {
                         return true;
@@ -157,31 +157,32 @@ public class Practice14HashMapImplementation {
         }
 
         private int getIndex(K key) {
-            int hashNumber = hash(key);
-            return hashNumber % array.length;
+            return hash(key) % array.length;
         }
 
         private int hash(K key) {
             if (key == null) {
                 return 0;
             }
-            return key.hashCode();
+            // guarantee hash code is not negative;
+            return key.hashCode() & 0X7FFFFFFF;
         }
 
         private boolean needRehash() {
-            return (size + 0.0f) / array.length >= loadFactor;
+            float ratio = (size + 0.0f) / array.length;
+            return  ratio >= loadFactor;
         }
 
         private void rehash() {
             Entry<K, V>[] oldArray = array;
-            array = (Entry<K, V>[]) new Entry[(int) (oldArray.length * SCALE_FACTOR)];
-            for (Entry<K, V> entry : oldArray) {
-                while (entry != null) {
-                    Entry<K, V> next = entry.next;
-                    int index = getIndex(entry.getKey());
-                    entry.next = array[index];
-                    array[index] = entry;
-                    entry = next;
+            array = (Entry<K, V>[]) (new Entry[(int) (oldArray.length * SCALE_FACTOR)]);
+            for (Entry<K, V> node : oldArray) {
+                while (node != null) {
+                    Entry<K, V> next = node.next;
+                    int index = getIndex(node.getKey());
+                    node.next = array[index];
+                    array[index] = node;
+                    node = next;
                 }
             }
         }
@@ -190,7 +191,7 @@ public class Practice14HashMapImplementation {
             return Objects.equals(key1, key2);
         }
         private boolean valuesEqual(V value1, V value2) {
-            return Objects.equals(value1, value2);
+            return value1 == value2 || value1 != null && value1.equals(value2);
         }
     }
 }
