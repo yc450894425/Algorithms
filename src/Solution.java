@@ -5,7 +5,11 @@ public class Solution {
 
     public static void main(String[] args) {
         Class10BitRepresentationAndBitOperations solution = new Class10BitRepresentationAndBitOperations();
-        System.out.println(solution.hex(16));
+        System.out.println(0b00000000000000000000000000000101);
+        System.out.println(0b11111111111111111111111111111011);
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.remove(0);
     }
 
     private static void printArray(int[] array) {
