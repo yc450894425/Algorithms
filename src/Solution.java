@@ -5,7 +5,7 @@ public class Solution {
 
     public static void main(String[] args) {
         Class11RecursionII solution = new Class11RecursionII();
-        System.out.println(solution.nqueens(4));
+        System.out.println(solution.spiralI(new int[][]{{1, 2, 3}, {8, 9, 4}, {7, 6, 5}}));
     }
 
     private static void printArray(int[] array) {

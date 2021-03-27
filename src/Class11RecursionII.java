@@ -2,10 +2,89 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Class11RecursionII {
-//    public double power(int a, int b)
-//    public List<Integer> spiral(int[][] matrix) {
-//
-//    }
+    // N*N 2D array, recursive solution
+    public List<Integer> spiral(int[][] matrix) {
+        List<Integer> result = new ArrayList<>();
+        spiralPrint(0, matrix.length, matrix, result);
+        return result;
+    }
+    /*  T T T R
+    *   L X X R
+    *   L X X R
+    *   L B B B
+    * */
+    private void spiralPrint(int offset, int size, int[][] m, List<Integer> result) {
+        // base cases
+        if (size <= 1) {
+            if (size == 1) {
+                result.add(m[offset][offset]);
+            }
+            return;
+        }
+        // recursive rules
+        // top
+        for (int i = 0; i < size - 1; i++) {
+            result.add(m[offset][offset + i]);
+        }
+        // right
+        for (int i = 0; i < size - 1; i++) {
+            result.add(m[offset + i][offset + size - 1]);
+        }
+        // bottom
+        for (int i = size - 1; i > 0; i--) {
+            result.add(m[offset + size - 1][offset + i]);
+        }
+        // left
+        for (int i = size - 1; i > 0; i--) {
+            result.add(m[offset + i][offset]);
+        }
+        // inner spiral
+        spiralPrint(offset + 1, size - 2, m, result);
+    }
+    // N*N 2D array, iterative solution
+    /*  T T T T
+    *   L X X R
+    *   L X X R
+    *   B B B B
+    * */
+    public List<Integer> spiralI(int[][] matrix) {
+        List<Integer> result = new ArrayList<>();
+        int start = 0;
+        int end = matrix.length - 1;
+        // base case is when there is only 1 or 0 element in the submatrix;
+        // AKA start >= end
+        while (start < end) {
+            // top
+            for (int i = start; i <= end; i++) {
+                result.add(matrix[start][i]);
+            }
+            // right
+            for (int i = start + 1; i <= end - 1; i++) {
+                result.add(matrix[i][end]);
+            }
+            // bottom
+            for (int i = end; i >= start; i--) {
+                result.add(matrix[end][i]);
+            }
+            // left
+            for (int i = end - 1; i >= start + 1; i--) {
+                result.add(matrix[i][start]);
+            }
+            // update start and end
+            start++;
+            end--;
+        }
+        // post-processing
+        if (start == end) {
+            result.add(matrix[start][end]);
+        }
+        return result;
+    }
+    // M*N 2D array, recursive solution
+    /*
+    * */
+    public List<Integer> spiralII(int[][] matrix) {}
+
 
 //    result.get(0) = 3, means the position of the first queue is [0, 3].
 //    time: O(n^n * n), optimized to O(n! * n)
