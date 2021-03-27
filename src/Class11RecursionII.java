@@ -3,16 +3,17 @@ import java.util.List;
 
 public class Class11RecursionII {
     // N*N 2D array, recursive solution
-    public List<Integer> spiral(int[][] matrix) {
+    public List<Integer> spiralI(int[][] matrix) {
         List<Integer> result = new ArrayList<>();
         spiralPrint(0, matrix.length, matrix, result);
         return result;
     }
+
     /*  T T T R
-    *   L X X R
-    *   L X X R
-    *   L B B B
-    * */
+     *   L X X R
+     *   L X X R
+     *   L B B B
+     * */
     private void spiralPrint(int offset, int size, int[][] m, List<Integer> result) {
         // base cases
         if (size <= 1) {
@@ -41,13 +42,14 @@ public class Class11RecursionII {
         // inner spiral
         spiralPrint(offset + 1, size - 2, m, result);
     }
+
     // N*N 2D array, iterative solution
     /*  T T T T
-    *   L X X R
-    *   L X X R
-    *   B B B B
-    * */
-    public List<Integer> spiralI(int[][] matrix) {
+     *   L X X R
+     *   L X X R
+     *   B B B B
+     * */
+    public List<Integer> spiralII(int[][] matrix) {
         List<Integer> result = new ArrayList<>();
         int start = 0;
         int end = matrix.length - 1;
@@ -80,13 +82,21 @@ public class Class11RecursionII {
         }
         return result;
     }
+
     // M*N 2D array, recursive solution
     /*
-    * */
-    public List<Integer> spiralII(int[][] matrix) {}
+     * */
+    public List<Integer> spiralIII(int[][] matrix) {
+        List<Integer> result = new ArrayList<>();
+        return result;
+    }
 
+    public List<Integer> spiralIIII(int[][] matrix) {
+        List<Integer> result = new ArrayList<>();
+        return result;
+    }
 
-//    result.get(0) = 3, means the position of the first queue is [0, 3].
+    //    result.get(0) = 3, means the position of the first queue is [0, 3].
 //    time: O(n^n * n), optimized to O(n! * n)
 //    space: O(1 * n) = O(n)
     public List<List<Integer>> nqueens(int n) {
@@ -97,6 +107,7 @@ public class Class11RecursionII {
         nqueensHelper(n, new ArrayList<>(), result);
         return result;
     }
+
     private void nqueensHelper(int n, List<Integer> cur, List<List<Integer>> result) {
         // base cases
         if (cur.size() == n) {
@@ -112,6 +123,7 @@ public class Class11RecursionII {
             }
         }
     }
+
     private boolean isValid(int col, List<Integer> cur) {
         int row = cur.size();
         for (int i = 0; i < cur.size(); i++) {
@@ -122,6 +134,7 @@ public class Class11RecursionII {
         }
         return true;
     }
+
     // To be completed
     public List<List<Integer>> nqueensI(int n) {
         List<List<Integer>> result = new ArrayList<>();
@@ -131,7 +144,7 @@ public class Class11RecursionII {
         return result;
     }
 
-//    I define the subproblem as how to correctly reverse the linked list from head.next.next to the last node.
+    //    I define the subproblem as how to correctly reverse the linked list from head.next.next to the last node.
 //    I define the semantic of “reverseInPairs” is reversing the linked list correctly and returning the new head.
     public ListNode reverseInPairs(ListNode head) {
         // base cases
@@ -144,26 +157,27 @@ public class Class11RecursionII {
         newHead.next = head;
         return newHead;
     }
+
     /*  dummy => 2 => 1 => 3 => 4 => 5 => null
-    *                cur       next
-    *                   ↓
-    *   dummy => 2 => 1 => 4 => 3 => 5 => null
-    *                          cur
-    *   data structures:
-    *       dummy head
-    *       ListNode cur = dummy;
-    *
-    *   for each step:
-    *       ListNode next = cur.next.next;
-    *       cur.next.next = next.next;
-    *       next.next = cur.next;
-    *       cur.next = next;
-    *       cur = cur.next.next;
-    *
-    *   terminate: cur.next == null || cur.next.next == null
-    *
-    *   return dummy.next;
-    * */
+     *                cur       next
+     *                   ↓
+     *   dummy => 2 => 1 => 4 => 3 => 5 => null
+     *                          cur
+     *   data structures:
+     *       dummy head
+     *       ListNode cur = dummy;
+     *
+     *   for each step:
+     *       ListNode next = cur.next.next;
+     *       cur.next.next = next.next;
+     *       next.next = cur.next;
+     *       cur.next = next;
+     *       cur = cur.next.next;
+     *
+     *   terminate: cur.next == null || cur.next.next == null
+     *
+     *   return dummy.next;
+     * */
     public ListNode reverseInPairsI(ListNode head) {
         ListNode dummy = new ListNode(0);
         dummy.next = head;
@@ -178,9 +192,39 @@ public class Class11RecursionII {
         return dummy.next;
     }
 
-//    public boolean match(String input, String pattern) {
-//
-//    }
+    // recursive way
+    public boolean matchI(String input, String pattern) {
+        return helper(input, pattern, 0, 0);
+    }
+    private boolean helper(String s, String p, int si, int pi) {
+        // base cases
+        if (si == s.length() && pi == p.length()) {
+            return true;
+        }
+        if (si == s.length() || pi == p.length()) {
+            return false;
+        }
+
+        if (p.charAt(pi) >= 'A' && p.charAt(pi) <= 'z') {
+            // if p[pi] is a char
+            if (p.charAt(pi) == s.charAt(si)) {
+                return helper(s, p, si + 1, pi + 1);
+            }
+            return false;
+        }
+        int num = p.charAt(pi++) - '0';
+        while (pi < p.length() && p.charAt(pi) >= '0' && p.charAt(pi) <= '9') {
+            num = num * 10 + (p.charAt(pi++) - '0');
+        }
+        if (si + num - 1 < s.length()) {
+            return helper(s, p, si + num, pi);
+        }
+        return false;
+    }
+    // iterative way
+    public boolean matchII(String input, String pattern) {
+        return false;
+    }
 //
 //    public void numNodesLeft(TreeNodeLeft root) {
 //
