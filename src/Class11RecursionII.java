@@ -122,6 +122,7 @@ public class Class11RecursionII {
         }
         spiralIIIPrint(matrix, offset + 1, rows - 2, cols - 2, result);
     }
+    // M*N 2D array, iterative solution
     public List<Integer> spiralIIII(int[][] matrix) {
         List<Integer> result = new ArrayList<>();
         int up = 0;
@@ -326,10 +327,91 @@ public class Class11RecursionII {
         }
         return pi == p.length() && si == s.length();
     }
-//
-//    public void numNodesLeft(TreeNodeLeft root) {
-//
-//    }
-//    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode one, TreeNode two)
 
+    public class TreeNodeLeft {
+        int key;
+        TreeNodeLeft left;
+        TreeNodeLeft right;
+        int numNodesLeft;
+        public TreeNodeLeft(int key) {
+            this.key = key;
+        }
+    }
+    public void numNodesLeft(TreeNodeLeft root) {
+        numCount(root);
+    }
+    /*  The semantic of 'numCount' is count the number of left children of root,
+        store it in the numNodesLeft field,
+        then return the number of nodes under root (including root itself).
+    */
+    private int numCount(TreeNodeLeft root) {
+        // base cases
+        if (root == null) {
+            return 0;
+        }
+        // recursive rules
+        int left = numCount(root.left);
+        int right = numCount(root.right);
+        root.numNodesLeft = left;
+        return left + right + 1;
+    }
+
+    /*  I define the semantic of the method as returning the LCA of {one, two} that is/are under root.
+        case 1: both one and two are under root, return their LCA
+            case 1.1: one is two's ancestor, return one
+            case 1.2: two is one's ancestor, return two
+            case 1.3: otherwise, return the lowest node with one and two in its different subtrees
+        case 2: only one of them is under root, return that node
+        case 3: neither one or two are under root, return null
+        Since the given two nodes are guaranteed to be in the binary tree, we can use this method to solve the problem.
+    * */
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode one, TreeNode two) {
+        // base cases
+        if (root == one || root == two || root == null) {
+            return root;
+        }
+        // recursive rules
+        TreeNode left = lowestCommonAncestor(root.left, one, two);
+        TreeNode right = lowestCommonAncestor(root.right, one, two);
+        if (left != null && right != null) {
+            return root;
+        }
+        return left == null ? right : left;
+    }
+
+    /*  Given a binary tree where all the right nodes are leaf nodes,
+        flip it upside down and turn it into a tree with left leaf nodes as the root.
+    * */
+    // recursive way
+    public TreeNode reverse(TreeNode root) {
+        // base cases
+        if (root == null || root.left == null) {
+            return root;
+        }
+        // recursive rules
+        TreeNode newRoot = reverse(root.left);
+        root.left.right = root.right;
+        root.left.left = root;
+        root.left = null;
+        root.right = null;
+        return newRoot;
+    }
+    // iterative way
+    public TreeNode reverseI(TreeNode root) {
+        // corner cases
+        // records the root in last iteration
+        TreeNode prev = null;
+        // records the right child of root in last iteration
+        TreeNode prevRight = null;
+        while (root == null) {
+            TreeNode next = root.left;
+            TreeNode right = root.right;
+            root.left = prev;
+            root.right = prevRight;
+            prev = root;
+            prevRight = right;
+            root = next;
+        }
+        return prev;
+    }
 }
