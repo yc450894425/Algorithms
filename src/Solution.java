@@ -4,8 +4,8 @@ import java.util.*;
 public class Solution {
 
     public static void main(String[] args) {
-        Class11RecursionII solution = new Class11RecursionII();
-        System.out.println(solution.spiralIIII(new int[][]{{1,2,3}, {10,11,4}, {9,12,5}, {8,7,6}}));
+        Class12DPI solution = new Class12DPI();
+        System.out.println(solution.fibonacci(6));
     }
 
     private static void printArray(int[] array) {
