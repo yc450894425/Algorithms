@@ -1,11 +1,26 @@
+import ObjectOrientedDesign.ParkingLot.Car;
+import ObjectOrientedDesign.ParkingLot.ParkingLot;
+import ObjectOrientedDesign.ParkingLot.Truck;
+import ObjectOrientedDesign.ParkingLot.Vehicle;
+
 import java.util.*;
 
 // quickSelect
 public class Solution {
 
     public static void main(String[] args) {
-        Class12DPI solution = new Class12DPI();
-        System.out.println(solution.fibonacci(6));
+        ParkingLot lot = new ParkingLot(4, 10, 0.8f);
+        List<Vehicle> list = new ArrayList<>();
+        for (int i = 0; i < 50; i++) {
+            final Vehicle v = i < 15 ? new Truck() : new Car();
+            boolean hasSpot = lot.hasSpot(v);
+            System.out.println("i = " + i + ", size = " + v.getSize() + ", hasSpot = " + hasSpot);
+            System.out.println("Parking: " + (lot.park(v) ? "success" : "fail"));
+            list.add(v);
+        }
+        for (int i = 0; i < list.size(); i++) {
+            System.out.println(lot.leave(list.get(i)));
+        }
     }
 
     private static void printArray(int[] array) {
