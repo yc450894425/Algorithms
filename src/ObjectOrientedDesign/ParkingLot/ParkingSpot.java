@@ -1,12 +1,7 @@
 package ObjectOrientedDesign.ParkingLot;
 
-/* APIs:
-boolean canFit(Vehicle v)
-boolean park(Vehicle v)
-void leave()
-public Vehicle getVehicle()
-* */
 public class ParkingSpot {
+
     private final VehicleSize size;
     private Vehicle vehicle;
 
@@ -18,12 +13,10 @@ public class ParkingSpot {
         return this.size.ordinal() >= v.getSize().ordinal();
     }
 
-    public boolean tryPark(Vehicle v) {
+    public void park(Vehicle v) {
         if (this.vehicle == null && fit(v)) {
             this.vehicle = v;
-            return true;
         }
-        return false;
     }
 
     public void leave() {

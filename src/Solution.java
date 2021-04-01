@@ -9,7 +9,7 @@ import java.util.*;
 public class Solution {
 
     public static void main(String[] args) {
-        ParkingLot lot = new ParkingLot(4, 10, 0.8f);
+        ParkingLot lot = new ParkingLot(4, 10, 0.5f);
         List<Vehicle> list = new ArrayList<>();
         for (int i = 0; i < 50; i++) {
             final Vehicle v = i < 15 ? new Truck() : new Car();

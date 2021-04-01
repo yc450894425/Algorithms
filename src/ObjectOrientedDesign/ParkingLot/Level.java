@@ -1,30 +1,25 @@
 package ObjectOrientedDesign.ParkingLot;
 
-import java.util.HashMap;
-
-/*
-one half compact spot, one half large spot;
-
-APIs:
-boolean hasSpot(Vehicle v)
-boolean park(Vehicle v)
-boolean leave(Vehicle v)
-* */
 public class Level {
-    private final ParkingSpot[] spots;
-    private HashMap<Vehicle, ParkingSpot> vehicleSpot;
 
-    public Level(int numSpots, float compactRatio) {
-        spots = new ParkingSpot[numSpots];
+    private static final float DEFAULT_LARGERATIO = 0.375f;
+    private final ParkingSpot[] spots;
+
+    public Level(int numOfSpots, float largeRatio) {
+        spots = new ParkingSpot[numOfSpots];
         int i = 0;
-        for (; i < spots.length * compactRatio; i++) {
-            spots[i] = new ParkingSpot(VehicleSize.Compact);
-        }
-        for (; i < spots.length; i++) {
+        for (; i < spots.length * largeRatio; i++) {
             spots[i] = new ParkingSpot(VehicleSize.Large);
         }
-        vehicleSpot = new HashMap<>();
+        for (; i < spots.length; i++) {
+            spots[i] = new ParkingSpot(VehicleSize.Compact);
+        }
     }
+
+    public Level(int numOfSpots) {
+        this(numOfSpots, DEFAULT_LARGERATIO);
+    }
+
     public boolean hasSpot(Vehicle v) {
         for (ParkingSpot spot : spots) {
             if (spot.fit(v) && spot.getVehicle() == null) {
@@ -33,25 +28,24 @@ public class Level {
         }
         return false;
     }
+
     public boolean park(Vehicle v) {
         for (ParkingSpot spot : spots) {
-            if (spot.tryPark(v)) {
-                vehicleSpot.put(v, spot);
+            if (spot.fit(v) && spot.getVehicle() == null) {
+                spot.park(v);
                 return true;
             }
         }
         return false;
     }
+
     public boolean leave(Vehicle v) {
-        ParkingSpot spot = vehicleSpot.get(v);
-        if (spot != null) {
-            spot.leave();
-            vehicleSpot.remove(v);
-            return true;
+        for (ParkingSpot spot : spots) {
+            if (spot.getVehicle() == v) {
+                spot.leave();
+                return true;
+            }
         }
         return false;
-    }
-    public ParkingSpot getSpot(Vehicle v) {
-        return vehicleSpot.get(v);
     }
 }
