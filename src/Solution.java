@@ -7,8 +7,29 @@ import java.util.*;
 
 // quickSelect
 public class Solution {
-    public static void main(String[] args) {
+    private final static Practice14HashMapImplementation.CustomHashMap<Integer, String> map1 = new Practice14HashMapImplementation.CustomHashMap<>();
+    private final static Practice23ConcurrencyII.SynchronizedHashMap<Integer, String> map2 = new Practice23ConcurrencyII.SynchronizedHashMap<>();
+    private final static Integer testKey = 0b1111111111111111;
+    private final static String testValue = "testValue";
 
+    public static void main(String[] args) throws InterruptedException {
+        map2.put(testKey, testValue);
+        MyThread myThread = new MyThread();
+        myThread.start();
+        while (true) {
+            if (!testValue.equals(map2.get(testKey))) {
+                throw new RuntimeException("This HashMap is not thread safe.");
+            }
+        }
+    }
+
+    public static class MyThread extends Thread {
+        @Override
+        public void run() {
+            for (int i = 0; i < 0b1111111111111111; i++) {
+                map2.put(i, "some value");
+            }
+        }
     }
 
     private static void printArray(int[] array) {

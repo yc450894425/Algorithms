@@ -51,7 +51,7 @@ public class Practice23ConcurrencyII {
             this(DEFAULT_CAPACITY, DEFAULT_LOAD_FACTOR);
         }
 
-        public V get(K key) {
+        public synchronized V get(K key) {
             // get index
             int index = getIndex(key);
             // look for key
@@ -66,7 +66,7 @@ public class Practice23ConcurrencyII {
             return null;
         }
 
-        public V put(K key, V value) {
+        public synchronized V put(K key, V value) {
             // get index
             int index = getIndex(key);
             // look for key
@@ -93,7 +93,7 @@ public class Practice23ConcurrencyII {
             return null;
         }
 
-        public V remove(K key) {
+        public synchronized V remove(K key) {
             // get index
             int index = getIndex(key);
             // look for key
@@ -115,7 +115,7 @@ public class Practice23ConcurrencyII {
             return null;
         }
 
-        public boolean containsKey(K key) {
+        public synchronized boolean containsKey(K key) {
             // get index
             int index = getIndex(key);
             Entry<K, V> node = array[index];
@@ -128,7 +128,7 @@ public class Practice23ConcurrencyII {
             return false;
         }
 
-        public boolean containsValue(V value) {
+        public synchronized boolean containsValue(V value) {
             if (isEmpty()) {
                 return false;
             }
@@ -143,15 +143,15 @@ public class Practice23ConcurrencyII {
             return false;
         }
 
-        public int size() {
+        public synchronized int size() {
             return size;
         }
 
-        public boolean isEmpty() {
+        public synchronized boolean isEmpty() {
             return size == 0;
         }
 
-        public void clear() {
+        public synchronized void clear() {
             Arrays.fill(this.array, null);
             size = 0;
         }
