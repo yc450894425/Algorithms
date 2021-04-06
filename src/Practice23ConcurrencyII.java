@@ -1,7 +1,7 @@
 import java.util.Arrays;
 import java.util.Objects;
 
-public class Practice14HashMapImplementation {
+public class Practice23ConcurrencyII {
 
     private static class Entry<K, V> {
         private final K key;
@@ -24,7 +24,7 @@ public class Practice14HashMapImplementation {
         }
     }
 
-    public static class CustomHashMap<K, V> {
+    public static class SynchronizedHashMap<K, V> {
 
         private static final int DEFAULT_CAPACITY = 11;
         private static final float DEFAULT_LOAD_FACTOR = 0.75f;//(不加f会默认是double)
@@ -33,21 +33,21 @@ public class Practice14HashMapImplementation {
         private int size;
         private float loadFactor; // used to help determine when to rehash
 
-        public CustomHashMap(int capacity, float loadFactor) {
+        public SynchronizedHashMap(int capacity, float loadFactor) {
             array = (Entry<K, V>[]) (new Entry[capacity]);
             size = 0;
             this.loadFactor = loadFactor;
         }
 
-        public CustomHashMap(int capacity) {
+        public SynchronizedHashMap(int capacity) {
             this(capacity, DEFAULT_LOAD_FACTOR);
         }
 
-        public CustomHashMap(float loadFactor) {
+        public SynchronizedHashMap(float loadFactor) {
             this(DEFAULT_CAPACITY, loadFactor);
         }
 
-        public CustomHashMap() {
+        public SynchronizedHashMap() {
             this(DEFAULT_CAPACITY, DEFAULT_LOAD_FACTOR);
         }
 
@@ -192,6 +192,32 @@ public class Practice14HashMapImplementation {
         }
         private boolean valuesEqual(V value1, V value2) {
             return value1 == value2 || value1 != null && value1.equals(value2);
+        }
+    }
+
+    public static class VolatileTest {
+
+        public static boolean flag = false;
+
+        public static class MyRunnable implements Runnable {
+
+            @Override
+            public void run() {
+                int i = 0;
+                while (!flag) {
+                    System.out.println("running");
+                    i++;
+                }
+                System.out.println("finished");
+            }
+        }
+
+        public static void main(String[] args) throws InterruptedException{
+            Thread newThread = new Thread(new MyRunnable());
+            newThread.start();
+            Thread.sleep(1000);
+            flag = true;
+            System.out.println("Main thread finished");
         }
     }
 }
