@@ -3,34 +3,32 @@ import ObjectOrientedDesign.ParkingLot.ParkingLot;
 import ObjectOrientedDesign.ParkingLot.Truck;
 import ObjectOrientedDesign.ParkingLot.Vehicle;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
 // quickSelect
 public class Solution {
-    private final static Practice14HashMapImplementation.CustomHashMap<Integer, String> map1 = new Practice14HashMapImplementation.CustomHashMap<>();
-    private final static Practice23ConcurrencyII.SynchronizedHashMap<Integer, String> map2 = new Practice23ConcurrencyII.SynchronizedHashMap<>();
-    private final static Integer testKey = 0b1111111111111111;
-    private final static String testValue = "testValue";
-
-    public static void main(String[] args) throws InterruptedException {
-        map2.put(testKey, testValue);
-        MyThread myThread = new MyThread();
-        myThread.start();
+    public static void main(String[] args) throws IOException {
+        Scanner scanner = new Scanner(System.in);
         while (true) {
-            if (!testValue.equals(map2.get(testKey))) {
-                throw new RuntimeException("This HashMap is not thread safe.");
+            int prev = scanner.nextInt();
+            if (prev == -1) {
+                break;
             }
+            int curr = scanner.nextInt();
+            System.out.printf("%.2f%%\n", growthRate(prev, curr));
         }
     }
 
-    public static class MyThread extends Thread {
-        @Override
-        public void run() {
-            for (int i = 0; i < 0b1111111111111111; i++) {
-                map2.put(i, "some value");
-            }
+    public static double growthRate(int prev, int curr) {
+        // corner cases
+        if (prev < 0 || curr < 0) {
+            return -1;
         }
+        return (curr - prev)*(100.0)/prev;
     }
+
 
     private static void printArray(int[] array) {
         for (int i = 0; i < array.length - 1; i++) {

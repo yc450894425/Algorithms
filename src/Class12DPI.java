@@ -23,8 +23,9 @@ public class Class12DPI {
             return 0;
         }
         for (int i = 2; i <= k; i++) {
-            b = a + b;
-            a = b - a;
+            long temp = a + b;
+            a = b;
+            b = temp;
         }
         return b;
     }
@@ -51,6 +52,23 @@ public class Class12DPI {
         }
         return max;
     }
+    public int longestII(int[] array) {
+        if (array.length == 0) {
+            return 0;
+        }
+        int cur = 1;
+        int result = 1;
+        for (int i = 1; i < array.length; i++) {
+            if (array[i] > array[i - 1]) {
+                cur ++;
+                result = Math.max(result, cur);
+            } else {
+                cur = 1;
+            }
+        }
+        return result;
+    }
+
     /*  m[i] represents the max product of cutting i length rope (at least one cut);
     *   our target is m[length];
     *   base case: m[0] = 0, m[1] = 0; (at least one cut)
@@ -83,13 +101,20 @@ public class Class12DPI {
     *   return canJump[0];
     * */
     public boolean canJump(int[] array) {
+        // corner cases
+        if (array.length <= 1) {
+            return true;
+        }
         boolean[] canJump = new boolean[array.length];
-        canJump[array.length - 1] = true;
         for (int i = array.length - 2; i >= 0; i--) {
-            for (int j = i + 1; j < array.length && j <= i + array[i]; j++) {
-                if (canJump[j]) {
-                    canJump[i] = true;
-                    break;
+            if (i + array[i] >= array.length - 1) {
+                canJump[i] = true;
+            } else {
+                for (int j = i + array[i]; j >= 1; j--) {
+                    if (canJump[j]) {
+                        canJump[i] = true;
+                        break;
+                    }
                 }
             }
         }
