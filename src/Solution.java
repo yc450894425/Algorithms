@@ -10,25 +10,9 @@ import java.util.*;
 // quickSelect
 public class Solution {
     public static void main(String[] args) throws IOException {
-        Scanner scanner = new Scanner(System.in);
-        while (true) {
-            int prev = scanner.nextInt();
-            if (prev == -1) {
-                break;
-            }
-            int curr = scanner.nextInt();
-            System.out.printf("%.2f%%\n", growthRate(prev, curr));
-        }
+        Class13DPII solution = new Class13DPII();
+        System.out.println(solution.canBreak("robcatd", new String[]{"rob","cat","d"}));
     }
-
-    public static double growthRate(int prev, int curr) {
-        // corner cases
-        if (prev < 0 || curr < 0) {
-            return -1;
-        }
-        return (curr - prev)*(100.0)/prev;
-    }
-
 
     private static void printArray(int[] array) {
         for (int i = 0; i < array.length - 1; i++) {

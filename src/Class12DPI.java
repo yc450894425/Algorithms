@@ -16,7 +16,7 @@ public class Class12DPI {
         }
         return fib[k];
     }
-    public long fibonacciI(int k) {
+    public long fibonacciII(int k) {
         long a = 0;
         long b = 1;
         if (k < 1) {
@@ -60,7 +60,7 @@ public class Class12DPI {
         int result = 1;
         for (int i = 1; i < array.length; i++) {
             if (array[i] > array[i - 1]) {
-                cur ++;
+                cur++;
                 result = Math.max(result, cur);
             } else {
                 cur = 1;
@@ -70,16 +70,16 @@ public class Class12DPI {
     }
 
     /*  m[i] represents the max product of cutting i length rope (at least one cut);
-    *   our target is m[length];
-    *   base case: m[0] = 0, m[1] = 0; (at least one cut)
-    *   induction rule:
-    *       m[i] = min value;
-    *       for (int j = 1; j < i; j++) {
-    *           int curBest = Math.max(m[j], j) * (i - j);
-    *           m[i] = Math.max(curBest, m[i]);
-    *       }
-    *   return m[length];
-    * */
+     *   our target is m[length];
+     *   base case: m[0] = 0, m[1] = 0; (at least one cut)
+     *   induction rule:
+     *       m[i] = min value;
+     *       for (int j = 1; j < i; j++) {
+     *           int curBest = Math.max(m[j], j) * (i - j);
+     *           m[i] = Math.max(curBest, m[i]);
+     *       }
+     *   return m[length];
+     * */
     public int maxProduct(int length) {
         int[] m = new int[length + 1];
         m[0] = 0;
@@ -94,12 +94,12 @@ public class Class12DPI {
     }
 
     /*  canJump[i] represents whether we can reach the last index from index i;
-    *   base case: canJump[array.length - 1] = true, since it's the last index;
-    *   induction rule:
-    *       canJump[i] is true, if we can find canJump[j] is true, i < j <= Math.min(i + array[i], array.length - 1);
-    *       otherwise, it's false;
-    *   return canJump[0];
-    * */
+     *   base case: canJump[array.length - 1] = true, since it's the last index;
+     *   induction rule:
+     *       canJump[i] is true, if we can find canJump[j] is true, i < j <= Math.min(i + array[i], array.length - 1);
+     *       otherwise, it's false;
+     *   return canJump[0];
+     * */
     public boolean canJump(int[] array) {
         // corner cases
         if (array.length <= 1) {
