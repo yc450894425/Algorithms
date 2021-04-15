@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Class13DPII {
     /*  A: there's at least one element in array.
@@ -50,6 +47,7 @@ public class Class13DPII {
         }
         return result;
     }
+
     public int largestSumII(int[] array) {
         int result = array[0];
         int curr = array[0];
@@ -59,6 +57,7 @@ public class Class13DPII {
         }
         return result;
     }
+
     /*  How to return the left-right border of the solution?
         Maintain a left and a right pointers, and a globLeft and a globRight.
         left: 0, update to i when m[i - 1] <= 0;
@@ -118,6 +117,7 @@ public class Class13DPII {
         }
         return isWord[len];
     }
+
     private Set<String> toSet(String[] dict) {
         Set<String> set = new HashSet<>();
         for (String s : dict) {
@@ -178,6 +178,38 @@ public class Class13DPII {
             }
         }
         return dist[m][n];
+    }
+
+    /*  len[i][j] represents the length of the largest square whose bottom right corner is matrix[i][j].
+        base case:
+            len[0][j] = 1 if matrix[0][j] == 1, 0 otherwise;
+            len[i][0] = 1 if matrix[i][0] == 1, 0 otherwise;
+        induction rule:
+            len[i][j] = min(len[i - 1][j - 1], len[i - 1][j], len[i][j - 1]) + 1;
+        How to fill out the len[][]?
+            left to right, up to down
+        return:
+            globalMax
+        Time Complexity:
+            O(n^2), where n = matrix.length;
+        Space Complexity:
+            O(n^2)
+     */
+    public int largest(int[][] matrix) {
+        int n = matrix.length;
+        int[][] len = new int[n][n];
+        int globMax = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i == 0 || j == 0) {
+                    len[i][j] = matrix[i][j];
+                } else if (matrix[i][j] == 1){
+                    len[i][j] = Math.min(Math.min(len[i - 1][j], len[i][j - 1]), len[i - 1][j - 1]) + 1;
+                }
+                globMax = Math.max(globMax, len[i][j]);
+            }
+        }
+        return globMax;
     }
 
 }
