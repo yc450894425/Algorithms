@@ -54,49 +54,54 @@ public class Class14DPIII {
     * */
     public int largest(int[][] matrix) {
         // corner case
-        if (matrix.length == 0 || matrix[0].length == 0) {
+        int m = matrix.length;
+        if (m == 0) {
             return 0;
         }
-        int[][] topLeft = getTopLeftArms(matrix);
-        int[][] bottomRight = getBottomRightArms(matrix);
-        return getLargest(topLeft, bottomRight);
+        int n = matrix[0].length;
+        if (n == 0) {
+            return 0;
+        }
+        int[][] topLeft = getTopLeftArms(matrix, m, n);
+        int[][] bottomRight = getBottomRightArms(matrix, m, n);
+        return mergeToFirstAndGetLargest(topLeft, bottomRight, m, n);
     }
-    private int[][] getTopLeftArms(int[][] m) {
-        int[][] topLeft = new int[m.length][m[0].length];
-        for (int i = 0; i < m.length; i++) {
-            for (int j = 0; j < m[0].length; j++) {
-                int left = m[i][j] == 0 ? 0 : (j == 0 ? m[i][j] : m[i][j - 1] + 1);
-                int top = m[i][j] == 0 ? 0 : (i == 0 ? m[i][j] : m[i - 1][j] + 1);
-                topLeft[i][j] = Math.min(left, top);
+    private int[][] getTopLeftArms(int[][] matrix, int m, int n) {
+        int[][] top = new int[m][n];
+        int[][] left = new int[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                top[i][j] = matrix[i][j] == 0 ? 0 : (i == 0 ? matrix[i][j] : top[i - 1][j] + 1);
+                left[i][j] = matrix[i][j] == 0 ? 0 : (j == 0 ? matrix[i][j] : left[i][j - 1] + 1);
             }
         }
-        return topLeft;
+        mergeToFirstAndGetLargest(top, left, m, n);
+        return top;
     }
-    private int[][] getBottomRightArms(int[][] m) {
-        int[][] bottomRight = new int[m.length][m[0].length];
-        for (int i = m.length - 1; i >= 0; i--) {
-            for (int j = m[0].length - 1; j >= 0; j--) {
-                int right = m[i][j] == 0 ? 0 : (j == m[0].length - 1 ? m[i][j] : m[i][j + 1] + 1);
-                int bottom = m[i][j] == 0 ? 0 : (i == m.length - 1 ? m[i][j] : m[i + 1][j] + 1);
-                bottomRight[i][j] = Math.min(right, bottom);
+    private int[][] getBottomRightArms(int[][] matrix, int m, int n) {
+        int[][] bottom = new int[m][n];
+        int[][] right = new int[m][n];
+        for (int i = m - 1; i >= 0; i--) {
+            for (int j = n - 1; j >= 0; j--) {
+                bottom[i][j] = matrix[i][j] == 0 ? 0 : (i == m - 1 ? matrix[i][j] : bottom[i + 1][j] + 1);
+                right[i][j] = matrix[i][j] == 0 ? 0 : (j == n - 1 ? matrix[i][j] : right[i][j + 1] + 1);
             }
         }
-        return bottomRight;
+        mergeToFirstAndGetLargest(bottom, right, m, n);
+        return bottom;
     }
-    private int getLargest(int[][] topLeft, int[][] bottomRight) {
+    private int mergeToFirstAndGetLargest(int[][] a, int[][] b, int m, int n) {
         int globMax = 0;
-        for (int i = 0; i < topLeft.length; i++) {
-            for (int j = 0; j < topLeft[0].length; j++) {
-                int currMax = Math.min(topLeft[i][j], bottomRight[i][j]);
-                globMax = Math.max(globMax, currMax);
+        for (int i = 0; i < a.length; i++) {
+            for (int j = 0; j < a[0].length; j++) {
+                a[i][j] = Math.min(a[i][j], b[i][j]);
+                globMax = Math.max(a[i][j], globMax);
             }
         }
         return globMax;
     }
-    /*  11101
-        10111
-        11111
-        10110
-        00110
-    * */
+
+    public int largestSquareSurroundedByOne(int[][] matrix) {
+        return 0;
+    }
 }
