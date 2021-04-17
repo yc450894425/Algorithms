@@ -196,4 +196,123 @@ public class Class14DPIII {
         }
         return globMax;
     }
+
+    public int largestSquareOfMatches(int[][] matrix) {
+        if (matrix.length == 0 || matrix[0].length == 0) {
+            return 0;
+        }
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int[][] right = new int[m + 1][n + 1];
+        int[][] down = new int[m + 1][n + 1];
+        int result = 0;
+        for (int i = m - 1; i >= 0; i--) {
+            for (int j = n - 1; j >= 0; j--) {
+                right[i][j] = hasRight(matrix[i][j]) ? right[i][j + 1] + 1 : 0;
+                down[i][j] = hasDown(matrix[i][j]) ? down[i + 1][j] + 1 : 0;
+                if (hasRight(matrix[i][j]) && hasDown(matrix[i][j])) {
+                    for (int l = Math.min(right[i][j], down[i][j]); l > 0; l--) {
+                        if (down[i][j + l] >= l && right[i + l][j] >= l) {
+                            result = Math.max(result, l);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
+    private boolean hasRight(int n) {
+        return n == 1 || n == 3;
+    }
+    private boolean hasDown(int n) {
+        return n == 2 || n == 3;
+    }
+
+    /*  Pre-processing:
+            preSum[i][j] represents sum of {(0,0)...(i,j)}.
+            Pre-pre-processing:
+                preRowSum[i][j] represents sum of {(i,0)...(i,j)}.
+                base case:
+                    preRowSum[i][0] = matrix[i][0];
+                induction rule:
+                    preRS[i][j] = preRS[i][j - 1] + matrix[i][j];
+            base case:
+                preSum[0][j] = preRowSum[0][j];
+            induction rule:
+                preSum[i][j] = preSum[i - 1][j] + preRowSum[i][j];
+            time: O(m*n)
+
+        Finding largest sub-matrix:
+            globMax = 0;
+            sum[(i,j), (k,l)] = preSum[k][l] - preSum[i - 1][j] - preSum[i][j - 1] + preSum[i - 1][j - 1];
+            for for for for (i, j, k, l), calculate sum and update globMax if necessary;
+
+        Return:
+            globMax
+
+        Time:
+            O(mn) + O((mn)^2) => O((mn)^2)
+        Space:
+            O(mn) for preSum;
+    * */
+    public int largestSubMatrixSum(int[][] matrix) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+        // pre-processing
+        int[][] sum = new int[m + 1][n + 1];
+        int rowSum = matrix[0][0];
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                rowSum = j == 1 ? matrix[i - 1][j - 1] : rowSum + matrix[i - 1][j - 1];
+                sum[i][j] = i == 1 ? rowSum : (sum[i - 1][j] + rowSum);
+            }
+        }
+        // finding the largest sub-matrix
+        int globMax = Integer.MIN_VALUE;
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                for (int k = i; k <= m; k++) {
+                    for (int l = j; l <= n; l++) {
+                        int currSum = sum[k][l] - sum[i - 1][l] - sum[k][j - 1] + sum[i - 1][j - 1];
+                        globMax = Math.max(globMax, currSum);
+                    }
+                }
+            }
+        }
+        return globMax;
+    }
+    /*  preSum[i][j] = sum{(0,j),(1,j), ..., (i,j)}
+        base case:
+            preSum[0][j] = matrix[0][j]
+        induction rule:
+            preSum[i][j] = preSum[i - 1][j] + matrix[i][j];
+    * */
+    public int largestSubMatrixSumII(int[][] matrix) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+        int globMax = Integer.MIN_VALUE;
+        for (int i = 0; i < m; i++) {
+            int[] curRow = new int[n];
+            for (int j = i; j < m; j++) {
+                add(curRow, matrix[j]);
+                globMax = Math.max(globMax, getLargest(curRow));
+            }
+        }
+        return globMax;
+    }
+    private void add(int[] base, int[] addend) {
+        for (int i = 0; i < base.length; i++) {
+            base[i] += addend[i];
+        }
+    }
+    private int getLargest(int[] array) {
+        int largest = array[0];
+        int curr = array[0];
+        for (int i = 1; i < array.length; i++) {
+            curr = Math.max(curr + array[i], array[i]);
+            largest = Math.max(largest, curr);
+        }
+        return largest;
+    }
 }

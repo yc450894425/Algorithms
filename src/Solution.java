@@ -11,7 +11,10 @@ import java.util.*;
 public class Solution {
     public static void main(String[] args) throws IOException {
         Class14DPIII solution = new Class14DPIII();
-        System.out.println(solution.largestX(new int[][]{{1,0,0,0,0,0,0,0,1},{0,0,0,0,0,0,0,0,0},{0,0,1,0,0,0,1,0,0},{0,0,0,1,0,1,0,0,0},{0,0,0,0,1,0,0,0,0},{0,0,0,1,0,1,0,0,0},{0,0,1,0,0,0,1,0,0},{0,1,0,0,0,0,0,1,0},{1,0,0,0,0,0,0,0,1}}));
+        System.out.println(solution.largestSubMatrixSum(new int[][]{
+                {-1,-2,-3},
+                {-4,-3,-2},
+                {-3,0,-1}}));
     }
 
 
