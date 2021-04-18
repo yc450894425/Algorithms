@@ -7,16 +7,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
 
-// quickSelect
 public class Solution {
-    public static void main(String[] args) throws IOException {
-        Class14DPIII solution = new Class14DPIII();
-        System.out.println(solution.largestSubMatrixSum(new int[][]{
-                {-1,-2,-3},
-                {-4,-3,-2},
-                {-3,0,-1}}));
-    }
+    public static void main(String[] args) {
 
+    }
 
     private static void printArray(int[] array) {
         for (int i = 0; i < array.length - 1; i++) {
