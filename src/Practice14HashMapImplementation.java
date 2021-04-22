@@ -1,4 +1,6 @@
 import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class Practice14HashMapImplementation {
@@ -193,5 +195,15 @@ public class Practice14HashMapImplementation {
         private boolean valuesEqual(V value1, V value2) {
             return value1 == value2 || value1 != null && value1.equals(value2);
         }
+    }
+
+    private static void isMapOrdered() {
+        Map<Integer, Integer> map = new LinkedHashMap<>();
+        for (int i = 10; i >= 0; i--) {
+            map.put(i, i);
+        }
+        map.forEach((k, v) -> {
+            System.out.print(k + " ");
+        });
     }
 }
