@@ -160,6 +160,64 @@ How many branches/different states should we try to put on each level?
         return factors;
     }
 
+    /*  How many levels in recursion tree? What does it store in each level?
+            n levels, where n is length of set.
+            It stores the letter in this position.
+        How many branches/different states should we try to put on each level?
+            Dynamically changing. Level 1 has n branches... Level n has 1 branch.
+    */
+    public List<String> allPermutationsOfSubsets(String set) {
+        List<String> result = new ArrayList<>();
+        if (set == null) {
+            return result;
+        }
+        char[] array = set.toCharArray();
+        allPermutationsOfSubsetsHelper(array, 0, result);
+        return result;
+    }
+    private void allPermutationsOfSubsetsHelper(char[] set, int index, List<String> result) {
+        result.add(new String(set, 0, index));
+        // recursive rule
+        for (int i = index; i < set.length; i++) {
+            swap(set, index, i);
+            allPermutationsOfSubsetsHelper(set, index + 1, result);
+            swap(set, index, i);
+        }
+    }
+    private void swap(char[] array, int left, int right){
+        char tmp = array[left];
+        array[left] = array[right];
+        array[right] = tmp;
+    }
+
+        /*  How many levels in recursion tree? What does it store in each level?
+            4 levels.
+            It stores one part of an IP address.
+        How many branches/different states should we try to put on each level?
+            3 branches.
+            x, xx, xxx.
+            The first number of xx and xxx cannot be 0.
+        Base case:
+            level == 4
+                if index == array.length, add this to result
+        Recursive rule:
+            try one letter
+            two letters
+            three letters
+
+    */
+    public List<String> restore(String ip) {
+
+    }
+    private void restoreHelper(char[] array, int index, int level, StringBuilder sb, List<String> result) {
+        // base case
+        if (level == 4 && index == array.length) {
+            result.add(sb.toString());
+        }
+        // recursive rule
+    }
+
+
 
 
 
