@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Class17CrossTraining {
+public class Class17CrossTrainingI {
 
     /*
         slow: all elements on the left side of slow (including slow itself) are elements we want to keep in the result.
@@ -234,9 +234,72 @@ public class Class17CrossTraining {
         return result;
     }
 
-    /*  Assumption: no parent pointer; guaranteed to be in the BST.
+    /*  Assumptions: No parent pointer; guaranteed to be in the binary tree.
+        I define the semantic of the method is returning the LCA of {one, two} that is/are under root.
+        case 1. Neither of one or two are under root, return null;
+        case 2. One of the two nodes is under root, return the node;
+        case 3. Both of them are under root,
+            case 3.1. one is two's ancestor, return one
+            case 3.2. two is one's ancestor, return two
+            case 3.3. otherwise, return the lowest node with one and two in its different subtree.
+    * */
+    public TreeNode lowestCommonAncestorI(TreeNode root, TreeNode one, TreeNode two) {
+        // base case
+        if (root == null || root == one || root == two) {
+            return root;
+        }
+        // recursive rule
+        TreeNode left = lowestCommonAncestorI(root.left, one, two);
+        TreeNode right = lowestCommonAncestorI(root.right, one, two);
+        if (left != null && right != null) {
+            return root;
+        }
+        return left == null ? right : left;
+    }
+
+    /*  Assumption: Node has parent pointer; not guaranteed to be in the binary tree.
+        High level idea:
+            Move both two nodes up through parent pointers until they collide.
+            1. get depth of two nodes
+                1.1 if they are not under the same root, return null
+            2. move the deeper node up until it matches the depth of another node
+            3. move both nodes up until they collide
+
+        Time: O(height) for get depth, O(height) for get LCA => O(height) => O(n)
+        Space: O(1)
+    * */
+    public TreeNodeP lowestCommonAncestorII(TreeNodeP one, TreeNodeP two) {
+        int d1 = getDepth(one);
+        int d2 = getDepth(two);
+        if (d1 >= d2) {
+            return mergeNodes(two, one, d1 - d2);
+        } else {
+            return mergeNodes(one, two, d2 - d1);
+        }
+    }
+    private TreeNodeP mergeNodes(TreeNodeP shallower, TreeNodeP deeper, int diff) {
+        while (diff > 0) {
+            deeper = deeper.parent;
+            diff--;
+        }
+        while (shallower != deeper) {
+            shallower = shallower.parent;
+            deeper = deeper.parent;
+        }
+        return deeper;
+    }
+    private int getDepth(TreeNodeP node) {
+        int depth = 0;
+        while (node != null) {
+            node = node.parent;
+            depth++;
+        }
+        return depth;
+    }
+
+    /*  Assumption: Binary Search Tree; No parent pointer; guaranteed to be in the BST.
      * */
-    public TreeNode lcaInBST(TreeNode root, int p, int q) {
+    public TreeNode lowestCommonAncestorIII(TreeNode root, int p, int q) {
         int max = Math.max(p, q);
         int min = Math.min(p, q);
         while (root != null) {
@@ -251,46 +314,192 @@ public class Class17CrossTraining {
         return null;
     }
 
-    /*  Assumption: Node has parent pointer; not guaranteed to be in the binary tree.
-        High level idea:
-            Move both two nodes up through parent pointers until they collide.
-            1. get depth of two nodes
-                1.1 if they are not under the same root, return null
-            2. move the deeper node up until it matches the depth of another node
-            3. move both nodes up until they collide
-
-        Time: O(height) for get depth, O(height) for get LCA => O(height) => O(n)
-        Space: O(1)
+    /*  Assumptions: LCA of K nodes; No parent; Guaranteed to be in the binary tree.
+        I define the semantic of the method is returning the LCA of {nodes} that is/are under root.
+        case 1. None of them are under root, return null;
+        case 2. One of the them is under root, return the node;
+        case 3. Two or more of them are under root, return LCA of these nodes;
     * */
-    public TreeNodeP lowestCommonAncestor(TreeNodeP one, TreeNodeP two) {
-        int d1 = getDepth(one);
-        int d2 = getDepth(two);
-        if (d1 >= d2) {
-            return mergeNodes(two, one, d1 - d2);
-        } else {
-            return mergeNodes(one, two, d2 - d1);
+    public TreeNode lowestCommonAncestorIV(TreeNode root, List<TreeNode> nodes) {
+        Set<TreeNode> set = new HashSet<>(nodes);
+        return lowestCommonAncestorIV(root, set);
+    }
+    private TreeNode lowestCommonAncestorIV(TreeNode root, Set<TreeNode> set) {
+        // base case
+        if (root == null || set.contains(root)) {
+            return root;
         }
+        // recursive rule
+        TreeNode l = lowestCommonAncestorIV(root.left, set);
+        TreeNode r = lowestCommonAncestorIV(root.right, set);
+        if (l != null && r != null) {
+            return root;
+        }
+        return l == null ? r : l;
     }
 
-    private TreeNodeP mergeNodes(TreeNodeP shallower, TreeNodeP deeper, int diff) {
-        while (diff > 0) {
-            deeper = deeper.parent;
-            diff--;
+    /*  Assumptions: K-nary tree; no parent pointer; guaranteed to be in the tree.
+        I define the semantic of the method is returning the LCA of {a, b} that is/are under root.
+        case 1. Neither of them are under root, return null;
+        case 2. One of the them is under root, return the node;
+        case 3. Both of them are under root,
+            case 3.1. one is two's ancestor, return one
+            case 3.2. two is one's ancestor, return two
+            case 3.3. otherwise, return the lowest node with one and two in its different subtree.
+    * */
+    public KnaryTreeNode lowestCommonAncestorV(KnaryTreeNode root, KnaryTreeNode a, KnaryTreeNode b) {
+        // base case
+        if (root == null || root == a || root == b) {
+            return root;
         }
-        while (shallower != deeper) {
-            shallower = shallower.parent;
-            deeper = deeper.parent;
+        KnaryTreeNode found = null;
+        for (KnaryTreeNode child : root.children) {
+            KnaryTreeNode node = lowestCommonAncestorV(child, a, b);
+            if (node == null) {
+                continue;
+            }
+            if (found == null) {
+                // find one of them
+                found = node;
+            } else {
+                // find both of them
+                return root;
+            }
         }
-        return deeper;
+        return found;
     }
 
-    private int getDepth(TreeNodeP node) {
-        int depth = 0;
-        while (node != null) {
-            node = node.parent;
-            depth++;
+    /*  Assumptions: K-nary tree; M nodes; no parent pointer; guaranteed to be in the tree.
+        I define the semantic of the method is returning the LCA of {nodes} that is/are under root.
+        case 1. Neither of them are under root, return null;
+        case 2. One of the them is under root, return the node;
+        case 3. Two or more of them are under root, return their LCA;
+    * */
+    public KnaryTreeNode lowestCommonAncestorVI(KnaryTreeNode root, List<KnaryTreeNode> nodes) {
+        Set<KnaryTreeNode> set = new HashSet<>(nodes);
+        return lowestCommonAncestorVI(root, set);
+    }
+    private KnaryTreeNode lowestCommonAncestorVI(KnaryTreeNode root, Set<KnaryTreeNode> set) {
+        // base case
+        if (root == null || set.contains(root)) {
+            return root;
         }
-        return depth;
+        // recursive rule
+        KnaryTreeNode found = null;
+        for (KnaryTreeNode child : root.children) {
+            KnaryTreeNode node = lowestCommonAncestorVI(child, set);
+            if (node == null) {
+                continue;
+            }
+            if (found == null) {
+                found = node;
+            } else {
+                return root;
+            }
+        }
+        return found;
+    }
+
+    /*  Compare each pair of elements, move larger number to left half, smaller number to right half.
+        Then traverse left half to get the largest, traverse right half to get the smallest.
+        case 1. if length is odd:
+                0   12
+                [0, n / 2 - 1] left
+                [n / 2, len - 1] right
+        case 2. if length if even:
+                01  23
+                [0, n / 2 - 1] left
+                [n / 2, len - 1] right
+    * */
+    public int[] largestAndSmallest(int[] array) {
+        int n = array.length;
+        if (n == 1) {
+            return new int[]{array[0], array[0]};
+        }
+        for (int i = 0; i < n / 2; i++) {
+            if (array[i] < array[n - 1 - i]) {
+                swap(array, i, n - 1 - i);
+            }
+        }
+        return new int[]{largest(array, 0, n / 2), smallest(array, n / 2, n - 1)};
+    }
+    private void swap(int[] array, int i, int j) {
+        int tmp = array[i];
+        array[i] = array[j];
+        array[j] = tmp;
+    }
+    private int largest(int[] array, int l, int r) {
+        int largest = array[l];
+        for (int i = l + 1; i <= r; i++) {
+            largest = Math.max(largest, array[i]);
+        }
+        return largest;
+    }
+    private int smallest(int[] array, int l, int r) {
+        int smallest = array[l];
+        for (int i = l + 1; i <= r; i++) {
+            smallest = Math.min(smallest, array[i]);
+        }
+        return smallest;
+    }
+
+    public int[] largestAndSecond(int[] array) {
+        return largestAndSecondHelper(array, 0, array.length - 1);
+    }
+    private int[] largestAndSecondHelper(int[] array, int left, int right) {
+        // base case
+        if (left == right) {
+            return new int[]{array[left], Integer.MIN_VALUE};
+        }
+        // recursive rule
+        int mid = left + (right - left) / 2;
+        int leftMax = largestAndSecondHelper(array, left, mid)[0];
+        int leftSecond = largestAndSecondHelper(array, left, mid)[1];
+        int rightMax = largestAndSecondHelper(array, mid + 1, right)[0];
+        int rightSecond = largestAndSecondHelper(array, mid + 1, right)[1];
+        int max = Math.max(leftMax, rightMax);
+        // 1 (2 3)? 4
+        int second = Math.max(Math.max(leftSecond, rightSecond), Math.min(leftMax, rightMax));
+        return new int[]{max, second};
+    }
+
+    /*  Sliding window
+        Data structure：
+            queue
+            poll/peek[.....]offer
+            if queue.size() < k: add new elements into it;
+            if queue.size() >= k:
+                if new element is closer to target than queue.peek:
+                    queue.poll, add new element into queue
+                if not, we do nothing.
+    * */
+    public int[] closestKValues(TreeNode root, double target, int k) {
+        Queue<TreeNode> queue = new ArrayDeque<>();
+        closestValuesHelper(root, queue, target, k);
+        int[] result = new int[queue.size()];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = queue.poll().key;
+        }
+        return result;
+    }
+    /*  We define the semantic of the helper method is that traversing every node under root, find max(k, number of nodes) nodes whose numbers are closest to target.
+    * */
+    private void closestValuesHelper(TreeNode root, Queue<TreeNode> queue, double target, int k) {
+        if (root == null) {
+            return;
+        }
+        // in-order traversal
+        // left subtree
+        closestValuesHelper(root.left, queue, target, k);
+        // check if root is a valid node
+        if (queue.size() < k) {
+            queue.offer(root);
+        } else if (Math.abs(root.key - target) < Math.abs(queue.peek().key - target)) {
+            queue.poll();
+            queue.offer(root);
+        }
+        // right subtree
+        closestValuesHelper(root.right, queue, target, k);
     }
 
 
