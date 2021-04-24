@@ -207,7 +207,8 @@ How many branches/different states should we try to put on each level?
 
     */
     public List<String> restore(String ip) {
-
+        List<String> result = new ArrayList<>();
+        return result;
     }
     private void restoreHelper(char[] array, int index, int level, StringBuilder sb, List<String> result) {
         // base case
