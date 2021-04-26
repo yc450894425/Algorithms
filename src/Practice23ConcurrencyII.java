@@ -489,6 +489,7 @@ public class Practice23ConcurrencyII {
         for (Thread t : threads) {
             t.start();
         }
+
     }
 
     static class Producer implements Runnable {
@@ -562,6 +563,7 @@ public class Practice23ConcurrencyII {
             System.out.println("Consumer consumes " + queue.poll());
         }
     }
+
 }
 
 
