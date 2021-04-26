@@ -1,7 +1,4 @@
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class Practice14HashMapImplementation {
 
@@ -197,13 +194,17 @@ public class Practice14HashMapImplementation {
         }
     }
 
-    private static void isMapOrdered() {
-        Map<Integer, Integer> map = new LinkedHashMap<>();
-        for (int i = 10; i >= 0; i--) {
+    private static void isMapOrdered(Map<Integer, Integer> map) {
+        for (int i = 100000010; i >= 100000000; i--) {
             map.put(i, i);
         }
         map.forEach((k, v) -> {
             System.out.print(k + " ");
         });
+    }
+
+    public static void main(String[] args) {
+        Map<Integer, Integer> map = new LinkedHashMap<>();
+        isMapOrdered(map);
     }
 }

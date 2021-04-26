@@ -1,6 +1,4 @@
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -456,7 +454,7 @@ public class Practice23ConcurrencyII {
         }
     }
 
-    public static class threadSafetyTest {
+    public static class HashMapThreadSafetyTest {
         public static final HashMap<Integer, String> map = new HashMap<>();
 
         public static void main(String[] args) {
@@ -478,4 +476,94 @@ public class Practice23ConcurrencyII {
             }
         }
     }
+
+    public static void main(String[] args) {
+        Manager manager = new Manager(20);
+        List<Thread> threads = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            threads.add(new Thread(new Practice23ConcurrencyII.Consumer(manager)));
+        }
+        for (int i = 0; i < 10; i++) {
+            threads.add(new Thread(new Practice23ConcurrencyII.Producer(manager)));
+        }
+        for (Thread t : threads) {
+            t.start();
+        }
+    }
+
+    static class Producer implements Runnable {
+        Manager manager;
+
+        public Producer(Manager manager) {
+            this.manager = manager;
+        }
+
+        @Override
+        public void run() {
+            while (true) {
+                int random = (int) (Math.random() * 100);
+                manager.put(random);
+            }
+        }
+    }
+
+    static class Consumer implements Runnable {
+        Manager manager;
+
+        public Consumer(Manager manager) {
+            this.manager = manager;
+        }
+
+        @Override
+        public void run() {
+            while (true) {
+                manager.take();
+            }
+        }
+    }
+
+    static class Manager {
+        private Queue<Integer> queue;
+        private int limit;
+
+        public Manager(int limit) {
+            this.limit = limit;
+            queue = new LinkedList<>();
+        }
+
+        public synchronized void put(Integer num) {
+            while (queue.size() == limit) {
+                System.out.println("Queue is full. Producer starts waiting.");
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (queue.isEmpty()) {
+                notifyAll();
+            }
+            System.out.println("Producer produces " + num);
+            queue.offer(num);
+        }
+
+        public synchronized void take() {
+            while (queue.isEmpty()) {
+                System.out.println("Queue is empty. Consumer starts waiting.");
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (queue.size() == limit) {
+                notifyAll();
+            }
+            System.out.println("Consumer consumes " + queue.poll());
+        }
+    }
 }
+
+
+
+

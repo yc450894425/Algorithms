@@ -37,7 +37,8 @@ public class Class16DFSII {
         subSetsHelper(array, index + 1, sb, result);
     }
 
-    /*  How many levels in recursion tree? What does it store in each level?
+    /*  Assumptions: No duplicates.
+        How many levels in recursion tree? What does it store in each level?
             n levels, where n is length of set.
             It stores the decision whether we choose the character or not.
         How many branches/different states should we try to put on each level?
@@ -69,21 +70,23 @@ public class Class16DFSII {
     }
 
     /* 	How many levels in the recursion tree? What does it store in each level?
-	2*(l+m+n) levels.
-	Each level stores/decides one parenthesis.
-How many branches/different states should we try to put on each level?
-	6 branches.
-	(, ), <, >, {, }.
-*/
+        2*(l+m+n) levels.
+        Each level stores/decides one parenthesis.
+        How many branches/different states should we try to put on each level?
+        6 branches.
+        (, ), <, >, {, }.
+    */
 // l for (), m for <>, n for {}
     private static final char[] PS = new char[]{'(', ')', '<', '>', '{', '}'};
-    public List<String> validParentheses(int l, int m, int n) {
+
+    public List<String> validParenthesesII(int l, int m, int n) {
         List<String> result = new ArrayList<>();
         int[] remains = new int[]{l, l, m, m, n, n};
         Deque<Character> stack = new ArrayDeque<>();
         validParenthesesHelper(stack, remains, new StringBuilder(), result, 2 * (l + m + n));
         return result;
     }
+
     private void validParenthesesHelper(Deque<Character> stack, int[] remains, StringBuilder sb, List<String> result, int total) {
         // base case
         if (sb.length() == total) {
@@ -91,7 +94,7 @@ How many branches/different states should we try to put on each level?
             return;
         }
         // recursive rule
-        for (int i = 0; i < remains.length; i ++) {
+        for (int i = 0; i < remains.length; i++) {
             // add left
             if (i % 2 == 0 && remains[i] > 0) {
                 stack.offerFirst(PS[i]);
@@ -131,6 +134,7 @@ How many branches/different states should we try to put on each level?
         combinationsHelper(target, factors, 0, cur, result);
         return result;
     }
+
     private void combinationsHelper(int target, List<Integer> factors, int index, List<Integer> cur, List<List<Integer>> result) {
         // base case
         if (index == factors.size() || target == 1) {
@@ -150,6 +154,7 @@ How many branches/different states should we try to put on each level?
         }
         cur.subList(size, cur.size()).clear();
     }
+
     private List<Integer> getFactors(int target) {
         List<Integer> factors = new ArrayList<>();
         for (int i = target / 2; i > 1; i--) {
@@ -160,7 +165,8 @@ How many branches/different states should we try to put on each level?
         return factors;
     }
 
-    /*  How many levels in recursion tree? What does it store in each level?
+    /*  Assumptions: No duplicates.
+        How many levels in recursion tree? What does it store in each level?
             n levels, where n is length of set.
             It stores the letter in this position.
         How many branches/different states should we try to put on each level?
@@ -175,6 +181,7 @@ How many branches/different states should we try to put on each level?
         allPermutationsOfSubsetsHelper(array, 0, result);
         return result;
     }
+
     private void allPermutationsOfSubsetsHelper(char[] set, int index, List<String> result) {
         result.add(new String(set, 0, index));
         // recursive rule
@@ -184,43 +191,138 @@ How many branches/different states should we try to put on each level?
             swap(set, index, i);
         }
     }
-    private void swap(char[] array, int left, int right){
+
+    private void swap(char[] array, int left, int right) {
         char tmp = array[left];
         array[left] = array[right];
         array[right] = tmp;
     }
 
-        /*  How many levels in recursion tree? What does it store in each level?
-            4 levels.
-            It stores one part of an IP address.
-        How many branches/different states should we try to put on each level?
-            3 branches.
-            x, xx, xxx.
-            The first number of xx and xxx cannot be 0.
-        Base case:
-            level == 4
-                if index == array.length, add this to result
-        Recursive rule:
-            try one letter
-            two letters
-            three letters
-
-    */
-    public List<String> restore(String ip) {
-        List<String> result = new ArrayList<>();
-        return result;
+    public int minDifference(int[] array) {
+        int[] minDiff = new int[]{Integer.MAX_VALUE};
+        int totalSum = 0;
+        for (int n : array) {
+            totalSum += n;
+        }
+        minDifferenceHelper(minDiff, array, 0, 0, 0, totalSum);
+        return minDiff[0];
     }
-    private void restoreHelper(char[] array, int index, int level, StringBuilder sb, List<String> result) {
+
+    private void minDifferenceHelper(int[] minDiff, int[] array, int index, int count, int sum, int totalSum) {
         // base case
-        if (level == 4 && index == array.length) {
-            result.add(sb.toString());
+        if (count == array.length / 2 || index == array.length) {
+            if (count == array.length / 2) {
+                minDiff[0] = Math.min(minDiff[0], Math.abs(2 * sum - totalSum));
+            }
+            return;
         }
         // recursive rule
+        // add this number
+        sum += array[index];
+        minDifferenceHelper(minDiff, array, index + 1, count + 1, sum, totalSum);
+        sum -= array[index];
+        minDifferenceHelper(minDiff, array, index + 1, count, sum, totalSum);
+        // Don't add this number
     }
 
+    /*  Keypoint: how to deduplicate?
+            The canonical way to solve this is to enforce a generation order.
+            First, I convert the input set to a char array then sort the array so duplicates will be adjacent.
+            Then I will enforce the following order when I generate the set of possible choices for a given stage:
+                For one kind of letter, if I choose not to pick it, then I should ignore all its following duplicates.
+    * */
+    public List<String> subSetsIIOfSizeK(String set, int k) {
+        List<String> result = new ArrayList<>();
+        char[] array = set.toCharArray();
+        Arrays.sort(array);
+        subSetsIIOfSizeKHelper(array, k, 0, new StringBuilder(), result);
+        return result;
+    }
 
+    private void subSetsIIOfSizeKHelper(char[] set, int k, int index, StringBuilder curr, List<String> result) {
+        // base case
+        if (curr.length() == k || index == set.length) {
+            if (curr.length() == k) {
+                result.add(curr.toString());
+            }
+            return;
+        }
+        // recursive rule
+        // Add
+        subSetsIIOfSizeKHelper(set, k, index + 1, curr.append(set[index]), result);
+        curr.deleteCharAt(curr.length() - 1);
+        // Don't add, skip all duplicates
+        while (index + 1 < set.length && set[index + 1] == set[index]) {
+            index++;
+        }
+        subSetsIIOfSizeKHelper(set, k, index + 1, curr, result);
+    }
 
+    /* 	How many levels in the recursion tree? What does it store in each level?
+        2*(l+m+n) levels.
+        Each level stores the choices of the corresponding position.
+        How many branches/different states should we try to put on each level?
+        6 branches.
+        (, ), <, >, {, }.
+    */
+//    public List<String> validParenthesesIII(int l, int m, int n) {
+//
+//    }
 
+    /*  How many levels in recursion tree? What does it store in each level?
+        4 levels.
+        It stores one part of an IP address.
+    How many branches/different states should we try to put on each level?
+        3 branches.
+        x, xx, xxx.
+        The first number of xx and xxx cannot be 0.
+    Base case:
+        level == 4
+            if index == array.length, add this to result
+    Recursive rule:
+        try one letter
+        two letters
+        three letters
+*/
+    public List<String> restore(String ip) {
+        List<String> result = new ArrayList<>();
+        char[] array = ip.toCharArray();
+        restoreHelper(array, 0, 0, new StringBuilder(), result);
+        return result;
+    }
+
+    private void restoreHelper(char[] array, int curr, int level, StringBuilder sb, List<String> result) {
+        // base case
+        if (level == 4) {
+            if (curr == array.length) {
+                result.add(sb.substring(0, sb.length() - 1));
+            }
+            return;
+        }
+        // recursive rule
+        // 1 digit
+        if (curr < array.length) {
+            restoreHelper(array, curr + 1, level + 1, sb.append(array[curr]).append('.'), result);
+            sb.delete(sb.length() - 2, sb.length());
+        }
+        // 2 digits
+        if (curr + 1 < array.length) {
+            if (array[curr] != '0') {
+                restoreHelper(array, curr + 2, level + 1, sb.append(array[curr]).append(array[curr + 1]).append('.'), result);
+                sb.delete(sb.length() - 3, sb.length());
+            }
+        }
+        // 3 digits
+        if (curr + 2 < array.length) {
+            char a = array[curr];
+            char b = array[curr + 1];
+            char c = array[curr + 2];
+            if (a == '1' || a == '2' && b >= '0' && b <= '4' || a == '2' && b == '5' && c >= '0' && c <= '5') {
+                restoreHelper(array, curr + 3, level + 1, sb.append(array[curr]).append(array[curr + 1]).append(array[curr + 2]).append('.'), result);
+                sb.delete(sb.length() - 4, sb.length());
+            }
+        }
+    }
 
 
 }
