@@ -10,7 +10,8 @@ import java.util.*;
 public class Solution {
     public static void main(String[] args) {
         Review1Algorithms solution = new Review1Algorithms();
-        System.out.println(solution.numOfSubarraySumK(new int[]{1, 1, 1}, 2));
+        System.out.println(solution.maxArea(new int[][]{{1,0,0,1,0},{1,0,1,0,0},{0,0,1,0,1},{1,0,1,0,1},{1,0,1,1,0}}));
+
     }
 
     private static void printArray(int[] array) {

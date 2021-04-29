@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.List;
 
 public class Review1Algorithms {
 
@@ -39,4 +40,70 @@ public class Review1Algorithms {
         }
         return count;
     }
+
+    public Integer maxArea(int[][] m) {
+//        int[][] m = toMatrix(a);
+        int[] max = new int[]{0};
+        boolean[][] visited = new boolean[m.length][m[0].length];
+        for (int i = 0; i < m.length; i++) {
+            for (int j = 0; j < m[0].length; j++) {
+                maxAreaHelper(m, visited, i, j, max);
+            }
+        }
+        return max[0];
+    }
+    /*
+    High level idea: Breadth First Search
+    I define the semantic of the helper function as calculating the maximum number of 1s that are adjacent to m[i][j].
+    Data Structure:
+        int[][] m:
+            converted from List a
+        boolean[][] visited:
+            visited[i][j] = true represents m[i][j] has been visited before
+        int[] max:
+            only 1 element. max[0] represents the max number of 1s that are adjacent.
+
+    */
+    private int maxAreaHelper(int[][] m, boolean[][] visited, int i , int j, int[] max) {
+        // base case
+        if (outOfBound(i, j, m.length, m[0].length) || visited[i][j] || m[i][j] == 0) {
+            return 0;
+        }
+        // recursive rule
+        visited[i][j] = true;
+        int down = maxAreaHelper(m, visited, i + 1, j, max);
+        int up = maxAreaHelper(m, visited, i - 1, j, max);
+        int left = maxAreaHelper(m, visited, i, j - 1, max);
+        int right = maxAreaHelper(m, visited, i, j + 1, max);
+        int  currMax = down + up + left + right + 1;
+        max[0] = Math.max(max[0], currMax);
+        return currMax;
+    }
+    private int[][] toMatrix(List<List<Integer>> list) {
+        int rows = list.size();
+        int cols = getColumns(list);
+        int[][] matrix = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                Integer ele = list.get(i).get(j);
+                if (ele == null || ele == 0) {
+                    matrix[i][j] = 0;
+                } else {
+                    matrix[i][j] = 1;
+                }
+            }
+        }
+        return matrix;
+    }
+    private int getColumns(List<List<Integer>> list) {
+        int cols = 0;
+        for (int i = 0; i < list.size(); i++) {
+            cols = Math.max(cols, list.get(i).size());
+        }
+        return cols;
+    }
+    private boolean outOfBound(int i, int j, int rows, int cols) {
+        return i < 0 || j < 0 || i >= rows || j >= cols;
+    }
+
 }
