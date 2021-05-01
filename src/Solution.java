@@ -10,10 +10,10 @@ import java.util.*;
 public class Solution {
     public static void main(String[] args) {
         Class16DFSII solution = new Class16DFSII();
-        printArray(solution.keepDistanceII(3));
+        printGenericArray(solution.combinations(231));
     }
 
-    private static void printArray(int[] array) {
+    private static void printIntArray(int[] array) {
         for (int i = 0; i < array.length - 1; i++) {
 //            System.out.print(i + 1);
 //            System.out.print(": ");
@@ -54,5 +54,25 @@ public class Solution {
             node = node.prev;
         }
         System.out.println("null");
+    }
+
+    private static void printMatrix(int[][] m) {
+        for (int i = 0; i < m.length; i++) {
+            for (int j = 0; j < m[0].length; j++) {
+                System.out.print(m[i][j]);
+                if (j != m[0].length - 1) {
+                    System.out.print(" ");
+                } else {
+                    System.out.println();
+                }
+            }
+        }
+    }
+
+    private static <E> void printGenericArray(E[] array) {
+        for (E e : array) {
+            System.out.print(e + " ");
+        }
+        System.out.println();
     }
 }

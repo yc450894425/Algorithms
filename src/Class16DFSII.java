@@ -120,23 +120,23 @@ public class Class16DFSII {
     }
 
     /* 	How many levels in the recursion tree? What does it store in each level?
-	factors.size() levels.
-Each level decides the number of a factor.
-How many branches/different states should we try to put on each level?
-	It’s dynamically changing.
+	        factors.size() levels.
+            Each level decides the number of a factor.
+        How many branches/different states should we try to put on each level?
+	        It’s dynamically changing.
 */
-    public List<List<Integer>> combinations(int target) {
+    public List<List<Integer>> factorCombinations(int target) {
         List<List<Integer>> result = new ArrayList<>();
         if (target <= 1) {
             return result;
         }
         List<Integer> cur = new ArrayList<>();
         List<Integer> factors = getFactors(target);
-        combinationsHelper(target, factors, 0, cur, result);
+        factorCombinationsHelper(target, factors, 0, cur, result);
         return result;
     }
 
-    private void combinationsHelper(int target, List<Integer> factors, int index, List<Integer> cur, List<List<Integer>> result) {
+    private void factorCombinationsHelper(int target, List<Integer> factors, int index, List<Integer> cur, List<List<Integer>> result) {
         // base case
         if (index == factors.size() || target == 1) {
             if (target == 1) {
@@ -145,13 +145,13 @@ How many branches/different states should we try to put on each level?
             return;
         }
         // recursive rule
-        combinationsHelper(target, factors, index + 1, cur, result);
+        factorCombinationsHelper(target, factors, index + 1, cur, result);
         int factor = factors.get(index);
         int size = cur.size();
         while (target % factor == 0) {
             cur.add(factor);
             target /= factor;
-            combinationsHelper(target, factors, index + 1, cur, result);
+            factorCombinationsHelper(target, factors, index + 1, cur, result);
         }
         cur.subList(size, cur.size()).clear();
     }
@@ -376,6 +376,119 @@ How many branches/different states should we try to put on each level?
         return false;
     }
 
+    /*
+        0 represents corridor
+        1 represents wall
+        Key insight:
+            Moving 2 positions each time can guarantee that there is no 2 * 2 corridor or wall.
+
+        0 1 0 0 0
+        0 1 0 1 0
+        0 1 0 1 0
+        0 1 0 1 0
+        0 0 0 1 0
+    * */
+    public int[][] maze(int n) {
+        int[][] maze = new int[n][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                // generate a maze where only (0,0) is corridor and other positions are walls.
+                // later we will break walls to generate corridors.
+                maze[i][j] = i == 0 && j == 0 ? 0 : 1;
+            }
+        }
+        generate(maze, 0, 0);
+        return maze;
+    }
+    private void generate(int[][] m, int x, int y) {
+        Dir[] dirs = Dir.values();
+        shuffle(dirs);
+        for (Dir dir : dirs) {
+            int nextX = dir.nextX(x, 2);
+            int nextY = dir.nextY(y, 2);
+            if (isValid(m, nextX, nextY)) {
+                // break walls(1) to generate corridors(0);
+                m[dir.nextX(x, 1)][dir.nextY(y, 1)] = 0;
+                m[nextX][nextY] = 0;
+                generate(m, nextX, nextY);
+            }
+        }
+    }
+    private boolean isValid(int[][] maze, int x, int y) {
+        return x >= 0 && x < maze.length && y >= 0 && y < maze[0].length && maze[x][y] == 1;
+    }
+    enum Dir {
+        NORTH(-1, 0), SOUTH(1, 0), EAST(0, 1), WEST(0, -1);
+        int deltaX;
+        int deltaY;
+
+        Dir(int deltaX, int deltaY) {
+            this.deltaX = deltaX;
+            this.deltaY = deltaY;
+        }
+
+        public int nextX(int x, int steps) {
+            return x + steps * deltaX;
+        }
+        public int nextY(int y, int steps) {
+            return y + steps * deltaY;
+        }
+    }
+    private void shuffle(Dir[] dirs) {
+        for (int i = 0; i < dirs.length; i++) {
+            int another = (int) (Math.random() * dirs.length);
+            Dir tmp = dirs[i];
+            dirs[i] = dirs[another];
+            dirs[another] = tmp;
+        }
+    }
+
+    /*
+        How many levels? What does it store in each level?
+            n, where n is length of number.
+            It stores a letter for the current number.
+        How many branches/different states should we try to put on each level?
+            depending on how many chars the number has.
+            2 => "abc", 3 branches
+            9 => "wxyz", 4 branches
+    * */
+    private static final String[] LETTERS = new String[]{"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+    public String[] combinations(int number) {
+        List<String> result = new ArrayList<>();
+        int[] digits = getDigits(number);
+        combinationsHelper(digits, 0, new StringBuilder(), result);
+        return result.toArray(new String[0]);
+    }
+    private void combinationsHelper(int[] digits, int index, StringBuilder sb, List<String> result) {
+        // base case
+        if (index == digits.length) {
+            result.add(sb.toString());
+            return;
+        }
+        // recursive rule
+        String curr= LETTERS[digits[index]];
+        for (int i = 0; i < curr.length(); i++) {
+            sb.append(curr.charAt(i));
+            combinationsHelper(digits, index + 1, sb, result);
+            sb.deleteCharAt(sb.length() - 1);
+        }
+    }
+    // convert a number to an array of digit and remove digits smaller than 2
+    private int[] getDigits(int num) {
+        int len = 0;
+        for (int i = num; i > 0; i /= 10) {
+            if (i % 10 > 1) {
+                len++;
+            }
+        }
+        int[] array = new int[len];
+        for (int i = num; i > 0; i /= 10) {
+            if (i % 10 > 1) {
+                array[--len] = i % 10;
+            }
+        }
+        return array;
+    }
 
     /*  How many levels in recursion tree? What does it store in each level?
         4 levels.
@@ -431,6 +544,5 @@ How many branches/different states should we try to put on each level?
             }
         }
     }
-
 
 }
