@@ -1,3 +1,4 @@
+import java.sql.Array;
 import java.util.*;
 
 
@@ -259,15 +260,122 @@ How many branches/different states should we try to put on each level?
     }
 
     /* 	How many levels in the recursion tree? What does it store in each level?
-        2*(l+m+n) levels.
-        Each level stores the choices of the corresponding position.
+            2*(l+m+n) levels.
+            Each level stores the parenthesis of each position.
         How many branches/different states should we try to put on each level?
-        6 branches.
-        (, ), <, >, {, }.
+            6 branches.
+            (, ), <, >, {, }.
+        Data structure:
+            stack: stores the INDICES of left parentheses that are not paired.
     */
-//    public List<String> validParenthesesIII(int l, int m, int n) {
-//
-//    }
+    public List<String> validParenthesesIII(int l, int m, int n) {
+        List<String> result = new ArrayList<>();
+        int[] num = new int[]{l, l, m, m, n, n};
+        validParenthesesIIIHelper(num, new StringBuilder(), result, new ArrayDeque<>(), l * 2 + m * 2 + n * 2);
+        return result;
+    }
+    private void validParenthesesIIIHelper(int[] remain, StringBuilder curr, List<String> result, Deque<Integer> stack, int targetLen) {
+        // base case
+        if (curr.length() == targetLen) {
+            result.add(new String(curr));
+            return;
+        }
+        // recursive rule
+        for (int i = 0; i < PS.length; i++) {
+            if (i % 2 == 0) { // left parenthesis
+                if (remain[i] > 0 && (stack.isEmpty() || stack.peekFirst() > i)) {
+                    stack.offerFirst(i);
+                    curr.append(PS[i]);
+                    remain[i]--;
+                    validParenthesesIIIHelper(remain, curr, result, stack, targetLen);
+                    stack.pollFirst();
+                    curr.deleteCharAt(curr.length() - 1);
+                    remain[i]++;
+                }
+            } else { // right parenthesis
+                if (!stack.isEmpty() && stack.peekFirst() == i - 1) {
+                    stack.pollFirst();
+                    curr.append(PS[i]);
+                    remain[i]--;
+                    validParenthesesIIIHelper(remain, curr, result, stack, targetLen);
+                    stack.offerFirst(i - 1);
+                    curr.deleteCharAt(curr.length() - 1);
+                    remain[i]++;
+                }
+            }
+        }
+    }
+
+    /*  High level idea:
+            1. use a hashmap to store each number and its first appearance.
+            2. use a hashset to store appeared number
+            3. use a boolean[] to record appeared number
+    * */
+    public int[] keepDistanceI(int k) {
+        int[] used = new int[k + 1];
+        int[] array = new int[2 * k];
+        return keepDistanceIHelper(used, array, 0) ? array : null;
+    }
+    private boolean keepDistanceIHelper(int[] used, int[] array, int index) {
+        // base case
+        if (index == array.length) {
+            return true;
+        }
+        // recursive rule
+        for (int n = 1; n < used.length; n++) {
+            // if this number can be put at array[index]:
+            //  put it here, update used[num], and call helper function, if it returns true, the caller returns true.
+            //  if not true, reset used[num]
+            if (used[n] == 0 || (used[n] == 1 && index - n - 1 >= 0 && array[index - n - 1] == n)) {
+                // add
+                array[index] = n;
+                used[n]++;
+                if (keepDistanceIHelper(used, array, index + 1)) {
+                    return true;
+                }
+                // delete
+                used[n]--;
+            }
+        }
+        return false;
+    }
+    /*  High level idea:
+            DFS
+            How many level? What does it store in each level?
+                k levels.
+                Each level stores one pair of numbers.
+            How many branches should we try to put on each level?
+                depending on how many valid positions are left.
+                3xxx3x, x3xxx3              => 2 branches
+                2xx2xx, x2xx2x, xx2xx2      => 3 branches
+    * */
+    public int[] keepDistanceII(int k) {
+        int[] array = new int[2 * k];
+        return keepDistanceIIHelper(array, k) ? array : null;
+    }
+    private boolean keepDistanceIIHelper(int[] array, int n) {
+        // base case
+        if (n == 0) {
+            return true;
+        }
+        // recursive rule
+        for (int i = 0; i <= array.length - n - 2; i++) {
+            if (array[i] != 0 || array[i + n + 1] != 0) {
+                continue;
+            }
+            // add
+            array[i] = n;
+            array[i + n + 1] = n;
+            if (keepDistanceIIHelper(array, n - 1)) {
+                return true;
+            }
+            // delete
+            array[i] = 0;
+            array[i + n + 1] = 0;
+        }
+        return false;
+    }
+
 
     /*  How many levels in recursion tree? What does it store in each level?
         4 levels.

@@ -9,9 +9,8 @@ import java.util.*;
 
 public class Solution {
     public static void main(String[] args) {
-        Review1Algorithms solution = new Review1Algorithms();
-        System.out.println(solution.maxArea(new int[][]{{1,0,0,1,0},{1,0,1,0,0},{0,0,1,0,1},{1,0,1,0,1},{1,0,1,1,0}}));
-
+        Class16DFSII solution = new Class16DFSII();
+        printArray(solution.keepDistanceII(3));
     }
 
     private static void printArray(int[] array) {
