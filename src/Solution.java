@@ -9,8 +9,19 @@ import java.util.*;
 
 public class Solution {
     public static void main(String[] args) {
-        Class16DFSII solution = new Class16DFSII();
-        printGenericArray(solution.combinations(231));
+        Class19CrossTrainingII solution = new Class19CrossTrainingII();
+        Class19CrossTrainingII.RandomListNode node1 = solution.new RandomListNode(10);
+        Class19CrossTrainingII.RandomListNode node2 = solution.new RandomListNode(20);
+        Class19CrossTrainingII.RandomListNode node3 = solution.new RandomListNode(30);
+        Class19CrossTrainingII.RandomListNode node4 = solution.new RandomListNode(40);
+        node1.next = node2;
+        node2.next = node3;
+        node3.next = node4;
+        node1.random = node3;
+        node2.random = node4;
+        node3.random = node1;
+        node4.random = node2;
+        System.out.println(solution.allTriples(new int[]{3,4,0,-1,2,0,5}, 10));
     }
 
     private static void printIntArray(int[] array) {
