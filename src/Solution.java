@@ -21,7 +21,7 @@ public class Solution {
         node2.random = node4;
         node3.random = node1;
         node4.random = node2;
-        System.out.println(solution.allTriples(new int[]{3,4,0,-1,2,0,5}, 10));
+        System.out.println(solution.fourSumI(new int[]{1, 2, 2, 3, 4}, 12));
     }
 
     private static void printIntArray(int[] array) {

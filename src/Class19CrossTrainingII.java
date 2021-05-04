@@ -308,16 +308,16 @@ public class Class19CrossTrainingII {
         List<List<Integer>> result = new ArrayList<>();
         Map<Integer, List<Integer>> occurs = new HashMap<>();
         for (int i = 0; i < array.length; i++) {
-            int curr = array[i];
-            List<Integer> indices = occurs.get(target - curr);
+            List<Integer> indices = occurs.get(target - array[i]);
             if (indices != null) {
                 for (int index : indices) {
                     result.add(Arrays.asList(i, index));
                 }
             }
-            List<Integer> currIndices = occurs.getOrDefault(curr, new ArrayList<>());
-            currIndices.add(i);
-            occurs.put(curr, currIndices);
+            if (!occurs.containsKey(array[i])) {
+                occurs.put(array[i], new ArrayList<>());
+            }
+            occurs.get(array[i]).add(i);
         }
         return result;
     }
@@ -410,7 +410,7 @@ public class Class19CrossTrainingII {
             Terminate: i == j
         Terminate: index == len - 3
     * */
-    public List<List<Integer>> allTriples(int[] array, int target) {
+    public List<List<Integer>> threeSum(int[] array, int target) {
         Arrays.sort(array);
         List<List<Integer>> result = new ArrayList<>();
         for (int index = 0; index <= array.length - 3; index++) {
@@ -437,7 +437,83 @@ public class Class19CrossTrainingII {
         return result;
     }
 
-//    public List<List<Integer>> allQuadruples(int[] array, int target) {
-//
-//    }
+    /*  Key point:
+            4 sum = 2 sum + 2 sum
+            i j k l
+            How to guarantee that one element won't be used more than once?
+                class Pair {
+                    int x;
+                    int y;
+                }
+                We maintain a map<2sum, list of all index pairs whose sum is the key>.
+        For each iteration (i, j):
+            sum = array[i] + array[j];
+            // check
+            if map.containsKey(target - sum):
+                for each pair in the list:
+                    if there is one pair neither of whose x/y == i/j:
+                        return true;
+            // add
+            if !map.containsKey(sum), put (sum, new list) into map
+            map.get(sum).add(new Pair(i, j))
+    * */
+    class Pair {
+        int x;
+        int y;
+        public Pair(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+    }
+    public boolean fourSumI(int[] array, int target) {
+        Map<Integer, List<Pair>> map = new HashMap<>();
+        for (int i = 0; i < array.length; i++) {
+            for (int j = i + 1; j < array.length; j++) {
+                int sum = array[i] + array[j];
+                List<Pair> pairs = map.get(target - sum);
+                if (pairs != null) {
+                    for (Pair pair : pairs) {
+                        if (pair.x != i && pair.y != i && pair.y != j) { // pair.x must <= i, and i < j. So pair.x must < j, then pair.x must != j;
+                            return true;
+                        }
+                    }
+                }
+                if (!map.containsKey(sum)) {
+                    map.put(sum, new ArrayList<>());
+                }
+                map.get(sum).add(new Pair(i, j));
+            }
+        }
+        return false;
+    }
+    /*  Key point:
+            We don't need to store all pairs for each key in the map.
+            Since 1. pair.x < pair.y, pair.x <= i, i < j, 2. we just need to prove existence, not all possible answers:
+                we just need to store one pair which has the smallest y value.
+            In other words, if we can find one pair that pair.x < pair.y < i < j, we can return true anyway.
+            To make it simpler, since pair.x < pair.y and i < j are always true,
+            we just need to check if pair.y < i.
+    * */
+    public boolean fourSumII(int[] array, int target) {
+        Map<Integer, Pair> map = new HashMap<>();
+        for (int i = 0; i < array.length; i++) {
+            for (int j = i + 1; j < array.length; j++) {
+                int sum = array[i] + array[j];
+                Pair pair = map.get(target - sum);
+                if (pair != null && pair.y < i) {
+                    return true;
+                }
+                Pair currPair = map.get(sum);
+                if (currPair == null || j < currPair.y) {
+                    map.put(sum, new Pair(i, j));
+                }
+            }
+        }
+        return false;
+    }
+
+
+    public int[] countArray(int[] array) {
+
+    }
 }
