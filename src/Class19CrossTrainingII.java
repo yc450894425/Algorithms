@@ -513,7 +513,64 @@ public class Class19CrossTrainingII {
     }
 
 
+    /*  Key point: Merge Sort.
+        When we merge two subarray together:
+            xxxi..., yyyj...
+            xxxyyy i/j
+            if (array[i] <= array[j]), how many elements smaller than array[i] are at the right side of i?
+                [0, j - 1], j elements.
+        We need an array "indices" to store the index of each element after merge sort.
+        Besides, we need an array "before" to record the index of each element before merge sort to help sort.
+        Of course, we need an array "count" to store the final result.
+    * */
     public int[] countArray(int[] array) {
-
+        int[] indices = getIndex(array);
+        int[] before = new int[array.length];
+        int[] count = new int[array.length];
+        mergeSort(array, 0, array.length - 1, indices, before, count);
+        return count;
+    }
+    private void mergeSort(int[] array, int left, int right, int[] indices, int[] before, int[] count) {
+        // base case
+        if (left >= right) {
+            return;
+        }
+        // recursive rule
+        int mid = left + (right - left) / 2;
+        mergeSort(array, left, mid, indices, before, count);
+        mergeSort(array, mid + 1, right, indices, before, count);
+        merge(array, left, mid, right, indices, before, count);
+    }
+    private void merge(int[] array, int left, int mid, int right, int[] indices, int[] before, int[] count) {
+        // copy indices into array "before" before merging
+        copy(indices, before, left, right);
+        // i is the pointer in array "before"
+        // left half: [left, mid]
+        int i = left;
+        // j is the pointer in array "before"
+        // right half: [mid + 1, right]
+        int j = mid + 1;
+        // cur is the pointer in array "indices"
+        int cur = left;
+        while (i <= mid) {
+            if (j > right || array[before[i]] <= array[before[j]]) {
+                count[before[i]] += j - mid - 1;
+                indices[cur++] = before[i++];
+            } else {
+                indices[cur++] = before[j++];
+            }
+        }
+    }
+    private void copy(int[] from, int[] to, int left, int right) {
+        for (int i = left; i <= right; i++) {
+            to[i] = from[i];
+        }
+    }
+    private int[] getIndex(int[] array) {
+        int[] indices = new int[array.length];
+        for (int i = 0; i < array.length; i++) {
+            indices[i] = i;
+        }
+        return indices;
     }
 }
