@@ -61,6 +61,7 @@ public class Class20RecursionIII {
         if (root == null) {
             return 0;
         }
+        // recursive rule
         int left = maxPathSumLeafToLeafHelper(root.left, max);
         int right = maxPathSumLeafToLeafHelper(root.right, max);
         if (root.left != null && root.right != null) {
