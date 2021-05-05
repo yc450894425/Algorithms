@@ -178,4 +178,86 @@ public class Class20RecursionIII {
         max[0] = Math.max(max[0], curr);
         return curr;
     }
+
+    public TreeNode flatten(TreeNode root) {
+        TreeNode[] prev = new TreeNode[1];
+        postOrderFlattenHelper(root, prev);
+        return root;
+    }
+    /*  We define the semantic of the helper function as
+            flattening the tree whose root is the input node to a linked list,
+            connecting the input node after the TreeNode prev,
+            and update prev to the last node of the linked list.
+
+                                    1
+                                /       \
+                               2         5
+                            /     \       \
+                          3       4        6
+
+                 1  =>  2   =>  3               =>  4   =>  5   =>  6
+                     prev[0]   cur
+
+            For each recursion:
+                if prev[0] == null, prev[0] = root
+                else prev[0].right = root, prev[0] = root
+
+                record root.left and root.right
+                root.left = null;
+                Why should we also record root.right?
+                    because root.right will be changed in the next recursion (as prev[0].right).
+
+                helper(root.left, prev);
+                helper(root.right, prev);
+    * */
+    private void preOrderFlattenHelper(TreeNode root, TreeNode[] prev) {
+        // base case
+        if (root == null) {
+            return;
+        }
+        // recursive rule
+        TreeNode left = root.left;
+        TreeNode right = root.right;
+        if (prev[0] != null) {
+            prev[0].right = root;
+        }
+        prev[0] = root;
+        root.left = null;
+        preOrderFlattenHelper(left, prev);
+        preOrderFlattenHelper(right, prev);
+    }
+    /*  We define the semantic of the helper function as
+            flattening the tree whose root is the input node to a linked list,
+            connecting the input node before the TreeNode next,
+            and update next to the first node of the linked list.
+
+                                    1
+                                /       \
+                               2         5
+                            /     \       \
+                          3       4        6
+
+                 1  =>          2   =>  3   =>  4   =>  5   =>  6
+                                c     next[0]
+
+            For each recursion:
+
+
+     */
+    private void postOrderFlattenHelper(TreeNode root, TreeNode[] next) {
+        // base case
+        if (root == null) {
+            return;
+        }
+        // recursive rule
+        postOrderFlattenHelper(root.right, next);
+        postOrderFlattenHelper(root.left, next);
+        root.right = next[0];
+        root.left = null;
+        next[0] = root;
+    }
+
+    public TreeNode reconstruct(int[] inOrder, int[] preOrder) {
+
+    }
 }
