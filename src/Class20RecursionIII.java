@@ -1,7 +1,5 @@
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.sql.Array;
+import java.util.*;
 
 public class Class20RecursionIII {
 
@@ -261,14 +259,14 @@ public class Class20RecursionIII {
                    iL     r        iR
         Map<node in inOrder, its index in inOrder>
     * */
-    public TreeNode reconstruct(int[] inOrder, int[] preOrder) {
+    public TreeNode reconstructWithPreAndIn(int[] inOrder, int[] preOrder) {
         Map<Integer, Integer> map = toMap(inOrder);
-        return reconstructHelper(preOrder, 0, preOrder.length - 1, 0, inOrder.length - 1, map);
+        return reconstructWithPreAndInHelper(preOrder, 0, preOrder.length - 1, 0, inOrder.length - 1, map);
     }
     /*  The semantic of the helper function is reconstructing a binary tree from inOrder[inL, inR] and preOrder[preL, preR],
         and returning the root of the tree.
     * */
-    private TreeNode reconstructHelper(int[] preOrder, int preL, int preR, int inL, int inR, Map<Integer, Integer> map) {
+    private TreeNode reconstructWithPreAndInHelper(int[] preOrder, int preL, int preR, int inL, int inR, Map<Integer, Integer> map) {
         // base case
         if (preL > preR) {
             return null;
@@ -277,8 +275,8 @@ public class Class20RecursionIII {
         TreeNode root = new TreeNode(preOrder[preL]);
         int rootIdx = map.get(root.key);
         int leftSize = rootIdx - inL;
-        TreeNode leftChild = reconstructHelper(preOrder, preL + 1, preL + leftSize, inL, rootIdx - 1, map);
-        TreeNode rightChild = reconstructHelper(preOrder, preL + leftSize + 1, preR, rootIdx + 1, inR, map);
+        TreeNode leftChild = reconstructWithPreAndInHelper(preOrder, preL + 1, preL + leftSize, inL, rootIdx - 1, map);
+        TreeNode rightChild = reconstructWithPreAndInHelper(preOrder, preL + leftSize + 1, preR, rootIdx + 1, inR, map);
         root.left = leftChild;
         root.right = rightChild;
         return root;
@@ -292,26 +290,75 @@ public class Class20RecursionIII {
     }
 
     /*  AKA reconstruct a binary tree from post-order array and in-order array.
-        Key point: if we reverse the postOrder array, it will be a [roo][right subtree][left subtree] "right first" pre-order array.
+        Key point: if we reverse the postOrder array, it will be a [root][right subtree][left subtree] "right first" pre-order array.
 
         post:   1 4 3 11 8 5
                            l
     * */
-    public TreeNode reconstructBST(int[] postOrder) {
+    public TreeNode reconstructBSTWithPost(int[] postOrder) {
         int[] lastIdx = new int[]{postOrder.length - 1};
-        return reconstructBSTHelper(postOrder, lastIdx, Integer.MIN_VALUE);
+        return reconstructBSTWithPostHelper(postOrder, lastIdx, Integer.MIN_VALUE);
     }
-    /*  Any key of any node under root should be larger than min.
+    /*  Any node in the right subtree of root should be larger than root.key. (BST property)
     * */
-    private TreeNode reconstructBSTHelper(int[] post, int[] lastIdx, int min) {
+    private TreeNode reconstructBSTWithPostHelper(int[] post, int[] lastIdx, int min) {
         // base case
         if (lastIdx[0] < 0 || post[lastIdx[0]] <= min) {
             return null;
         }
-        // recursive rule
         TreeNode root = new TreeNode(post[lastIdx[0]--]);
-        root.right = reconstructBSTHelper(post, lastIdx, root.key);
-        root.left = reconstructBSTHelper(post, lastIdx, min);
+        root.right = reconstructBSTWithPostHelper(post, lastIdx, root.key);
+        root.left = reconstructBSTWithPostHelper(post, lastIdx, min);
         return root;
     }
+
+    /*      Assumptions: no duplicates.
+            level:      5 3 8 1 4 11
+                        t l r l l r
+            in:         1 3 4 5 8 11
+                              t
+            We define the semantic of the helper helper as reconstructing a binary tree from the input level-order list and the in-order map, then returning the root of the binary tree.
+            step1:  pick the 1st element from the level-order array, which is the root of the current binary tree;
+                    And find the root in the in-order array;
+            step2:  Since we found the root in the in-order array, we can easily separate the level-order array into two parts:
+                        left subtree and right subtree.
+                    Specifically, we maintain a map<key, index in in-order array>, for each element in level-order array:
+                        if map.get(ele) < map.get(root), ele is in the left subtree;
+                        if .... > map.get(root), right subtree;
+            step3:  root.left = helper(leftList, map);
+                    root.right = helper(rightList, map);
+            return:
+                    root
+    * */
+    public TreeNode reconstructWithLevelAndIn(int[] inOrder, int[] levelOrder) {
+        List<Integer> level = new ArrayList<>();
+        Map<Integer, Integer> in = new HashMap<>();
+        for (int i = 0; i < inOrder.length; i++) {
+            level.add(levelOrder[i]);
+            in.put(inOrder[i], i);
+        }
+        return reconstructWithLevelAndInHelper(level, in);
+    }
+    private TreeNode reconstructWithLevelAndInHelper(List<Integer> level, Map<Integer, Integer> in) {
+        // base case
+        if (level.size() == 0) {
+            return null;
+        }
+        // recursive rule
+        TreeNode root = new TreeNode(level.remove(0));
+        int rootIdx = in.get(root.key);
+        List<Integer> left = new ArrayList<>();
+        List<Integer> right = new ArrayList<>();
+        for (int n : level) {
+            if (in.get(n) < rootIdx) {
+                left.add(n);
+            } else {
+                right.add(n);
+            }
+        }
+        root.left = reconstructWithLevelAndInHelper(left, in);
+        root.right = reconstructWithLevelAndInHelper(right, in);
+        return root;
+    }
+
 }
