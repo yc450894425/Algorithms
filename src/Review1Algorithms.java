@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -104,6 +105,52 @@ public class Review1Algorithms {
     }
     private boolean outOfBound(int i, int j, int rows, int cols) {
         return i < 0 || j < 0 || i >= rows || j >= cols;
+    }
+
+    /*
+        sliding window [l, r)
+        l = 0, r = 0, count = 0
+        For each step:
+            case 1. if count < s:
+                move r forward, update count
+            case 2. if count == s:
+                add window into result,
+                case 2.1. if array[r] == 0, r++
+                case 2.2. otherwise, shrink left border and update count;
+        Terminate:
+            r == array.length
+        Post-processing:
+            while count == s, add window into result, shrink left border, update count;
+    * */
+    public List<List<Integer>> subarray(int[] array, int s) {
+        List<List<Integer>> result = new ArrayList<>();
+        int l = 0;
+        int r = 0;
+        int count = 0;
+        while (r < array.length) {
+            if (count < s) {
+                count += array[r++];
+            } else {
+                add(array, l, r - 1, result);
+                if (array[r] == 0) {
+                    r++;
+                } else {
+                    count -= array[l++];
+                }
+            }
+        }
+        while (count == s) {
+            add(array, l, r - 1, result);
+            count -= array[l++];
+        }
+        return result;
+    }
+    private void add(int[] array, int l, int r, List<List<Integer>> result) {
+        List<Integer> curr = new ArrayList<>();
+        for (int i = l; i <= r; i++) {
+            curr.add(array[i]);
+        }
+        result.add(curr);
     }
 
 }

@@ -9,7 +9,8 @@ import java.util.*;
 
 public class Solution {
     public static void main(String[] args) {
-
+        Review1Algorithms review = new Review1Algorithms();
+        System.out.println(review.subarray(new int[]{1, 0, 1, 0, 1, 1, 0, 1, 1, 1}, 4));
     }
 
     private static void printIntArray(int[] array) {
