@@ -10,7 +10,8 @@ import java.util.*;
 public class Solution {
     public static void main(String[] args) {
         Review1Algorithms review = new Review1Algorithms();
-        System.out.println(review.subarray(new int[]{1, 0, 1, 0, 1, 1, 0, 1, 1, 1}, 4));
+        Class21CrossTrainingIII class21 = new Class21CrossTrainingIII();
+        System.out.println(class21.maxTrapped3D(new int[][]{{5,3,7,4,5},{6,2,5,2,3},{4,1,3,2,4},{9,6,8,2,3},{5,2,1,3,7}}));
     }
 
     private static void printIntArray(int[] array) {
