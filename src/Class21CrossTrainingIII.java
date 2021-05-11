@@ -276,6 +276,90 @@ public class Class21CrossTrainingIII {
         return globMax;
     }
 
+    /*  Assumptions:
+            matrix is not null;
+            non of the arrays in matrix is null either;
+            length of array may differ;
+            length of array may be 0;
+        Key point: minHeap
+        Data structure:
+            class Entry {
+                int row;
+                int col;
+                int value;
+                // constructor
+            }
+            PriorityQueue<Entry> minHeap = new PriorityQueue<>(new Comparator<Entry>() {
+                @Override
+                public int compare(Entry e1, Entry e2) {
+                    if (e1.value == e2.value) {
+                        return 0;
+                    }
+                    return e1.value < e2.value ? -1 : 1;
+                }
+            });
+            int[] result = new int[len];
+        Initialize:
+            put first element of every array into minHeap
+        For each step:
+            pop out an element (curr) from heap,
+            add curr.value into result
+            add the next element of curr into heap if valid
+        Terminate:
+            minHeap.isEmpty()
+        Time:
+            m rows, n cols,
+            O(m * n * logm) => O(mnlogm)
+        Space:
+            O(m) for heap
+    * */
+    class Entry {
+        int row;
+        int col;
+        int value;
+
+        public Entry(int row, int col, int value) {
+            this.row = row;
+            this.col = col;
+            this.value = value;
+        }
+
+    }
+    public int[] merge(int[][] matrix) {
+        PriorityQueue<Entry> minHeap = new PriorityQueue<>(new Comparator<Entry>() {
+            @Override
+            public int compare(Entry e1, Entry e2) {
+                if (e1.value == e2.value) {
+                    return 0;
+                }
+                return e1.value < e2.value ? -1 : 1;
+            }
+        });
+        int len = 0;
+        for (int i = 0; i < matrix.length; i++) {
+            if (matrix[i].length != 0) {
+                minHeap.offer(new Entry(i, 0, matrix[i][0]));
+                len += matrix[i].length;
+            }
+        }
+        int[] result = new int[len];
+        int index = 0;
+        for (int i = 0; i < len; i++) {
+            Entry curr = minHeap.poll();
+            result[index++] = curr.value;
+            if (curr.col + 1 < matrix[curr.row].length) {
+                curr.col++;
+                curr.value = matrix[curr.row][curr.col];
+                minHeap.offer(curr);
+            }
+        }
+        return result;
+    }
+
+    public ListNode merge(List<ListNode> list) {
+
+    }
+
 //    public List<Integer> commonElementsInKSortedArrays(List<List<Integer>> input) {
 //
 //    }
