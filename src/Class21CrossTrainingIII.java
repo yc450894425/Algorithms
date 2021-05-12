@@ -344,7 +344,7 @@ public class Class21CrossTrainingIII {
         }
         int[] result = new int[len];
         int index = 0;
-        for (int i = 0; i < len; i++) {
+        while (!minHeap.isEmpty()) {
             Entry curr = minHeap.poll();
             result[index++] = curr.value;
             if (curr.col + 1 < matrix[curr.row].length) {
@@ -356,12 +356,95 @@ public class Class21CrossTrainingIII {
         return result;
     }
 
+    /*  Very similar with the previous problem.
+    * */
     public ListNode merge(List<ListNode> list) {
-
+        // corner case
+        if (list == null || list.size() == 0) {
+            return null;
+        }
+        PriorityQueue<ListNode> minHeap = new PriorityQueue<>(new Comparator<ListNode>() {
+            @Override
+            public int compare(ListNode n1, ListNode n2) {
+                if (n1.value == n2.value) {
+                    return 0;
+                }
+                return n1.value < n2.value ? -1 : 1;
+            }
+        });
+        for (ListNode node : list) {
+            if (node != null) {
+                minHeap.offer(node);
+            }
+        }
+        ListNode dummy = new ListNode(0);
+        ListNode curr = dummy;
+        while (!minHeap.isEmpty()) {
+            curr.next = minHeap.poll();
+            if (curr.next.next != null) {
+                minHeap.offer(curr.next.next);
+            }
+            curr = curr.next;
+        }
+        return dummy.next;
     }
 
-//    public List<Integer> commonElementsInKSortedArrays(List<List<Integer>> input) {
-//
-//    }
+    /*  Three pointers
+    * */
+    public List<Integer> commonInThreeSortedArrays(int[] a, int[] b, int[] c) {
+        List<Integer> result = new ArrayList<>();
+        int i = 0;
+        int j = 0;
+        int k = 0;
+        while (i < a.length && j < b.length && k < c.length) {
+            if (a[i] == b[j] && b[j] == c[k]) {
+                result.add(a[i]);
+                i++;
+                j++;
+                k++;
+            } else if (a[i] <= b[j] && a[i] <= c[k]) {
+                i++;
+            } else if (b[j] <= a[i] && b[j] <= c[k]) {
+                j++;
+            } else {
+                k++;
+            }
+        }
+        return result;
+    }
+
+    /*
+        iterative way.
+            1 + 2 => 12 + 3 => 13 + 4 => 14 ... + n => 1n
+        Time: O((k - 1) * 2n) = O(kn), where k is the number of arrays, n is the average length of arrays.
+    */
+    public List<Integer> commonElementsInKSortedArrays(List<List<Integer>> input) {
+        if (input.size() == 0) {
+            return new ArrayList<>();
+        }
+        List<Integer> common = input.get(0);
+        for (int i = 1; i < input.size(); i++) {
+            common = commonInTwo(common, input.get(i));
+        }
+        return common;
+    }
+    private List<Integer> commonInTwo(List<Integer> a, List<Integer> b) {
+        List<Integer> common = new ArrayList<>();
+        int i = 0;
+        int j = 0;
+        while (i < a.size() && j < b.size()) {
+            int compare = a.get(i).compareTo(b.get(j));
+            if (compare == 0) {
+                common.add(a.get(i));
+                i++;
+                j++;
+            } else if (compare < 0) {
+                i++;
+            } else {
+                j++;
+            }
+        }
+        return common;
+    }
 }
 
