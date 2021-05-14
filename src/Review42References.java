@@ -101,7 +101,7 @@ public class Review42References {
     }
 
     public static void main(String[] args) {
-        WeakReferenceTest.test();
+        PhantomReferenceTest.test();
     }
 
 }
