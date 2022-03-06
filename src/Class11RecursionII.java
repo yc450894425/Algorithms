@@ -356,7 +356,7 @@ public class Class11RecursionII {
         return left + right + 1;
     }
 
-    /*  I define the semantic of the method as returning the LCA of {one, two} that is/are under root.
+    /*  I define the semantic of the method as returning the LCA of {one, two} which is/are under root.
         case 1: both one and two are under root, return their LCA
             case 1.1: one is two's ancestor, return one
             case 1.2: two is one's ancestor, return two
