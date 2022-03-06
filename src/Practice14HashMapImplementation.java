@@ -1,23 +1,22 @@
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.*;
 
 public class Practice14HashMapImplementation {
 
-    public static class Entry<K, V> {
+    private static class Entry<K, V> {
         private final K key;
         private V value;
         Entry<K, V> next;
-        public Entry(K key, V value) {
+        Entry(K key, V value) {
             this.key = key;
             this.value = value;
         }
-        public K getKey() {
+        K getKey() {
             return key;
         }
-        public V getValue() {
+        V getValue() {
             return value;
         }
-        public V setValue(V value) {
+        V setValue(V value) {
             V old = this.value;
             this.value = value;
             return old;
@@ -193,5 +192,19 @@ public class Practice14HashMapImplementation {
         private boolean valuesEqual(V value1, V value2) {
             return value1 == value2 || value1 != null && value1.equals(value2);
         }
+    }
+
+    private static void isMapOrdered(Map<Integer, Integer> map) {
+        for (int i = 100000010; i >= 100000000; i--) {
+            map.put(i, i);
+        }
+        map.forEach((k, v) -> {
+            System.out.print(k + " ");
+        });
+    }
+
+    public static void main(String[] args) {
+        Map<Integer, Integer> map = new LinkedHashMap<>();
+        isMapOrdered(map);
     }
 }

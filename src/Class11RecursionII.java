@@ -403,13 +403,13 @@ public class Class11RecursionII {
         TreeNode prev = null;
         // records the right child of root in last iteration
         TreeNode prevRight = null;
-        while (root == null) {
+        while (root != null) {
             TreeNode next = root.left;
-            TreeNode right = root.right;
+            TreeNode curRight = root.right;
             root.left = prev;
             root.right = prevRight;
             prev = root;
-            prevRight = right;
+            prevRight = curRight;
             root = next;
         }
         return prev;

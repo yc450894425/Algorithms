@@ -1,14 +1,20 @@
+import ObjectOrientedDesign.ParkingLot.Car;
+import ObjectOrientedDesign.ParkingLot.ParkingLot;
+import ObjectOrientedDesign.ParkingLot.Truck;
+import ObjectOrientedDesign.ParkingLot.Vehicle;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
-// quickSelect
 public class Solution {
-
     public static void main(String[] args) {
-        Class11RecursionII solution = new Class11RecursionII();
-        System.out.println(solution.spiralIIII(new int[][]{{1,2,3}, {10,11,4}, {9,12,5}, {8,7,6}}));
+        Review1Algorithms review = new Review1Algorithms();
+        Class21CrossTrainingIII class21 = new Class21CrossTrainingIII();
+        System.out.println(class21.maxTrapped3D(new int[][]{{5,3,7,4,5},{6,2,5,2,3},{4,1,3,2,4},{9,6,8,2,3},{5,2,1,3,7}}));
     }
 
-    private static void printArray(int[] array) {
+    private static void printIntArray(int[] array) {
         for (int i = 0; i < array.length - 1; i++) {
 //            System.out.print(i + 1);
 //            System.out.print(": ");
@@ -49,5 +55,25 @@ public class Solution {
             node = node.prev;
         }
         System.out.println("null");
+    }
+
+    private static void printMatrix(int[][] m) {
+        for (int i = 0; i < m.length; i++) {
+            for (int j = 0; j < m[0].length; j++) {
+                System.out.print(m[i][j]);
+                if (j != m[0].length - 1) {
+                    System.out.print(" ");
+                } else {
+                    System.out.println();
+                }
+            }
+        }
+    }
+
+    private static <E> void printGenericArray(E[] array) {
+        for (E e : array) {
+            System.out.print(e + " ");
+        }
+        System.out.println();
     }
 }
