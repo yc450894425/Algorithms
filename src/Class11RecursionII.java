@@ -357,7 +357,7 @@ public class Class11RecursionII {
     }
 
     /*  I define the semantic of the method as returning the LCA of {one, two} which is/are under root.
-        case 1: both one and two are under root, return their LCA
+        case 1: both one and two are under the root, return their LCA
             case 1.1: one is two's ancestor, return one
             case 1.2: two is one's ancestor, return two
             case 1.3: otherwise, return the lowest node with one and two in its different subtrees
